@@ -1,85 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ryan J. Murphy — Operator</title>
-<meta name="description" content="Operator and fixer. Program Manager, Head of Business Operations, Chief of Staff.">
+<meta name="description" content="Builder-operator. Chief of Staff, Head of Operations, Program Manager. I run the operation and build the tools it runs on.">
 <style>
   :root {
-    --ink: #0a0a0a;
+    --ink: #0e0e0e;
     --ink-soft: #2a2a2a;
     --ink-faint: #6a6a6a;
-    --paper: #f5f1e8;
-    --green: #2e7d4f;
-    --green-soft: rgba(46, 125, 79, 0.12);
+    --paper: #f4f5f3;
+    --panel: #ffffff;
+    --green: #1f7a4d;
+    --green-soft: rgba(31, 122, 77, 0.10);
   }
-
-  /* ========== DITHER PATTERN UTILITIES ==========
-     Bayer-style dither patterns using SVG data URIs.
-     Layered as background-image for textured fills.
-  */
-
-  /* 25% density ink dither on transparent — subtle paper texture */
-  /* 50% density ink dither — clear gridded pattern */
-  /* 75% density ink dither — heavy fill */
-
-  /* 25% density green dither — soft accent */
-  /* 50% density green dither — medium accent */
-  /* 75% density green dither — dominant accent */
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { -webkit-text-size-adjust: 100%; }
 
   body {
     background: var(--paper);
-    /* Subtle 25% ink dither for whole-page paper texture */
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%230a0a0a' fill-opacity='0.12'/><rect x='3' y='1' width='1' height='1' fill='%230a0a0a' fill-opacity='0.12'/><rect x='1' y='2' width='1' height='1' fill='%230a0a0a' fill-opacity='0.12'/><rect x='2' y='3' width='1' height='1' fill='%230a0a0a' fill-opacity='0.12'/></svg>");
-    background-size: 4px 4px;
     color: var(--ink);
     font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
     font-size: 17px;
-    line-height: 1.5;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
-    image-rendering: pixelated;
-  }
-
-  /* Reusable dither texture classes */
-  .dither-ink-50 {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%230a0a0a'/><rect x='2' y='1' width='1' height='1' fill='%230a0a0a'/><rect x='1' y='2' width='1' height='1' fill='%230a0a0a'/><rect x='3' y='3' width='1' height='1' fill='%230a0a0a'/></svg>") !important;
-    background-size: 4px 4px !important;
-    background-color: var(--paper) !important;
-  }
-
-  .dither-ink-75 {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%23f5f1e8'/><rect x='2' y='1' width='1' height='1' fill='%23f5f1e8'/><rect x='1' y='2' width='1' height='1' fill='%23f5f1e8'/><rect x='3' y='3' width='1' height='1' fill='%23f5f1e8'/></svg>") !important;
-    background-size: 4px 4px !important;
-    background-color: var(--ink) !important;
-  }
-
-  .dither-green-25 {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%232e7d4f'/><rect x='2' y='2' width='1' height='1' fill='%232e7d4f'/></svg>") !important;
-    background-size: 4px 4px !important;
-    background-color: var(--paper) !important;
-  }
-
-  .dither-green-50 {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%232e7d4f'/><rect x='2' y='1' width='1' height='1' fill='%232e7d4f'/><rect x='1' y='2' width='1' height='1' fill='%232e7d4f'/><rect x='3' y='3' width='1' height='1' fill='%232e7d4f'/></svg>") !important;
-    background-size: 4px 4px !important;
-    background-color: var(--paper) !important;
-  }
-
-  .dither-green-75 {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='1' y='0' width='1' height='1' fill='%23f5f1e8'/><rect x='3' y='2' width='1' height='1' fill='%23f5f1e8'/></svg>") !important;
-    background-size: 4px 4px !important;
-    background-color: var(--green) !important;
   }
 
   /* ========== TOP BANNER ========== */
   .banner {
     background: var(--ink);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='6' height='6' viewBox='0 0 6 6' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.08'/><rect x='3' y='3' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.08'/></svg>");
-    background-size: 6px 6px;
     color: var(--paper);
     padding: 14px 32px;
     font-family: 'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Menlo, Consolas, monospace;
@@ -89,38 +39,26 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 8px solid var(--green);
+    border-bottom: 6px solid var(--green);
     font-weight: 700;
-    position: relative;
-  }
-
-  /* Dithered overlay strip on banner border for textured edge */
-  .banner::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    right: 0;
-    height: 8px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='8' viewBox='0 0 4 8' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%230a0a0a'/><rect x='2' y='2' width='1' height='1' fill='%230a0a0a'/><rect x='1' y='4' width='1' height='1' fill='%230a0a0a'/><rect x='3' y='6' width='1' height='1' fill='%230a0a0a'/></svg>");
-    background-size: 4px 8px;
-    pointer-events: none;
   }
 
   .banner .left { display: flex; gap: 28px; }
   .banner .dot {
     display: inline-block;
-    width: 10px;
-    height: 10px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
     background: var(--green);
     margin-right: 10px;
     vertical-align: middle;
+    box-shadow: 0 0 0 3px var(--green-soft);
     animation: pulse 2.4s ease-in-out infinite;
   }
 
   @keyframes pulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+    50% { opacity: 0.35; }
   }
 
   @media (max-width: 700px) {
@@ -130,69 +68,47 @@
 
   /* ========== HEADER ========== */
   header.hero {
-    border-bottom: 6px solid var(--ink);
-    padding: 48px 32px 56px;
+    border-bottom: 5px solid var(--ink);
+    padding: 56px 32px 60px;
     position: relative;
-    background: transparent;
   }
 
-  /* Dithered noise overlay on hero */
-  header.hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='6' height='6' viewBox='0 0 6 6' shape-rendering='crispEdges'><rect x='1' y='0' width='1' height='1' fill='%230a0a0a' fill-opacity='0.06'/><rect x='4' y='2' width='1' height='1' fill='%230a0a0a' fill-opacity='0.06'/><rect x='0' y='4' width='1' height='1' fill='%230a0a0a' fill-opacity='0.06'/><rect x='3' y='5' width='1' height='1' fill='%230a0a0a' fill-opacity='0.06'/></svg>");
-    background-size: 6px 6px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* Dithered border strip below hero */
   header.hero::after {
     content: '';
     position: absolute;
-    bottom: -6px;
+    bottom: -5px;
     left: 0;
     right: 0;
-    height: 6px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='6' viewBox='0 0 4 6' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%232e7d4f'/><rect x='2' y='2' width='1' height='1' fill='%232e7d4f'/><rect x='1' y='4' width='1' height='1' fill='%232e7d4f'/></svg>");
-    background-size: 4px 6px;
-    pointer-events: none;
-    z-index: 1;
+    height: 5px;
+    background: var(--green);
   }
 
   .hero-grid {
     max-width: 1100px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 220px 1fr 240px;
-    gap: 40px;
-    align-items: start;
-    position: relative;
-    z-index: 2;
+    grid-template-columns: 220px 1fr 250px;
+    gap: 44px;
+    align-items: center;
   }
 
-  /* ========== PORTRAIT (DITHERED) ========== */
+  /* ========== PORTRAIT ========== */
   .portrait-wrap {
     width: 220px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
   }
 
   .portrait-frame {
     width: 220px;
     height: 220px;
-    border: 5px solid var(--ink);
+    border: 4px solid var(--ink);
     background: var(--ink);
     overflow: hidden;
-    position: relative;
-    border-radius: 50%;
-    /* Subtle outer dot grid frame */
-    box-shadow:
-      0 0 0 8px var(--paper),
-      0 0 0 10px var(--ink);
+    border-radius: 4px;
+    box-shadow: 10px 10px 0 0 var(--green);
   }
 
   .portrait-frame img {
@@ -200,58 +116,26 @@
     height: 100%;
     object-fit: cover;
     display: block;
-    /* Push image toward 1-bit: grayscale + high contrast */
-    filter: grayscale(1) contrast(1.85) brightness(1.05);
-    image-rendering: pixelated;
-  }
-
-  /* Bayer dither overlay on portrait — creates "printed photo" look */
-  .portrait-frame::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='3' height='3' viewBox='0 0 3 3' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%23f5f1e8'/><rect x='2' y='1' width='1' height='1' fill='%23f5f1e8'/><rect x='1' y='2' width='1' height='1' fill='%23f5f1e8'/></svg>");
-    background-size: 3px 3px;
-    mix-blend-mode: lighten;
-    opacity: 0.55;
-    pointer-events: none;
-    border-radius: 50%;
   }
 
   .portrait-tag {
     background: var(--green);
-    color: var(--paper);
-    padding: 8px 16px;
+    color: #fff;
+    padding: 8px 18px;
     font-family: 'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Menlo, Consolas, monospace;
     font-size: 11px;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     text-align: center;
-    border: 3px solid var(--ink);
     font-weight: 700;
-    position: relative;
   }
 
-  /* Dithered overlay on the tag for printed feel */
-  .portrait-tag::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='1' y='1' width='1' height='1' fill='%230a0a0a' fill-opacity='0.25'/><rect x='3' y='3' width='1' height='1' fill='%230a0a0a' fill-opacity='0.25'/></svg>");
-    background-size: 4px 4px;
-    pointer-events: none;
-  }
-
-  .name-block {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+  .name-block { display: flex; flex-direction: column; gap: 10px; }
 
   .label {
     font-family: 'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Menlo, Consolas, monospace;
     font-size: 11px;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.20em;
     text-transform: uppercase;
     color: var(--ink-faint);
     font-weight: 700;
@@ -259,48 +143,44 @@
 
   h1 {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-    font-size: clamp(52px, 9vw, 108px);
+    font-size: clamp(52px, 9vw, 104px);
     font-weight: 900;
     letter-spacing: -0.045em;
-    line-height: 0.88;
+    line-height: 0.86;
     color: var(--ink);
     text-transform: uppercase;
   }
 
   .lede {
-    font-size: clamp(20px, 2.4vw, 26px);
-    line-height: 1.3;
+    font-size: clamp(20px, 2.4vw, 25px);
+    line-height: 1.32;
     max-width: 760px;
-    margin-top: 24px;
+    margin-top: 26px;
     color: var(--ink);
     font-weight: 400;
   }
 
   .lede .underline {
-    background-color: var(--green);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='1' y='0' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.3'/><rect x='3' y='2' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.3'/></svg>");
-    background-size: 4px 4px;
-    color: var(--paper);
-    padding: 2px 6px;
+    background: var(--green);
+    color: #fff;
+    padding: 2px 7px;
     font-weight: 700;
   }
 
   /* ========== HERO READOUT BOX ========== */
   .readout {
-    border: 4px solid var(--ink);
-    background: var(--paper);
-    padding: 0;
+    border: 3px solid var(--ink);
+    background: var(--panel);
+    border-radius: 4px;
+    overflow: hidden;
     font-family: 'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Menlo, Consolas, monospace;
     font-size: 11px;
-    position: relative;
   }
 
   .readout-header {
     background: var(--ink);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='1' y='0' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.1'/><rect x='3' y='2' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.1'/></svg>");
-    background-size: 4px 4px;
     color: var(--paper);
-    padding: 8px 14px;
+    padding: 9px 14px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     font-weight: 700;
@@ -317,8 +197,8 @@
   .readout-row {
     display: flex;
     justify-content: space-between;
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--ink);
+    padding: 11px 14px;
+    border-bottom: 1px solid #e4e5e2;
     text-transform: uppercase;
     letter-spacing: 0.1em;
   }
@@ -329,16 +209,17 @@
   .readout-row .v-green { color: var(--green); }
 
   @media (max-width: 900px) {
-    .hero-grid { grid-template-columns: 220px 1fr; gap: 32px; }
+    .hero-grid { grid-template-columns: 200px 1fr; gap: 32px; }
     .readout { grid-column: 1 / -1; }
   }
 
   @media (max-width: 700px) {
-    .hero-grid { grid-template-columns: 1fr; gap: 24px; }
-    .portrait-wrap { width: 160px; }
-    .portrait-frame { width: 160px; height: 160px; }
-    header.hero { padding: 32px 20px 36px; }
-    h1 { line-height: 0.92; }
+    .hero-grid { grid-template-columns: 1fr; gap: 28px; justify-items: start; }
+    .portrait-wrap { width: 168px; }
+    .portrait-frame { width: 168px; height: 168px; }
+    header.hero { padding: 36px 20px 40px; }
+    h1 { line-height: 0.9; }
+    .readout { width: 100%; }
   }
 
   /* ========== MAIN ========== */
@@ -346,26 +227,22 @@
     max-width: 1100px;
     margin: 0 auto;
     padding: 0 32px;
-    position: relative;
   }
 
   section {
-    border-bottom: 3px solid var(--ink);
-    padding: 48px 0;
+    border-bottom: 2px solid var(--ink);
+    padding: 54px 0;
     position: relative;
   }
 
-  /* Dithered section dividers */
   section::after {
     content: '';
     position: absolute;
-    bottom: -3px;
+    bottom: -2px;
     left: 0;
-    right: 0;
-    height: 3px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='3' viewBox='0 0 4 3' shape-rendering='crispEdges'><rect x='0' y='1' width='1' height='1' fill='%232e7d4f'/><rect x='2' y='0' width='1' height='1' fill='%232e7d4f'/><rect x='3' y='2' width='1' height='1' fill='%232e7d4f'/></svg>");
-    background-size: 4px 3px;
-    pointer-events: none;
+    width: 90px;
+    height: 2px;
+    background: var(--green);
   }
 
   section:last-of-type { border-bottom: none; }
@@ -375,16 +252,14 @@
     display: grid;
     grid-template-columns: 180px 1fr;
     gap: 32px;
-    margin-bottom: 28px;
+    margin-bottom: 30px;
     align-items: start;
   }
 
   .section-num-block {
     background: var(--ink);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='1' y='0' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.12'/><rect x='3' y='2' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.12'/></svg>");
-    background-size: 4px 4px;
     color: var(--paper);
-    padding: 8px 12px;
+    padding: 8px 13px;
     font-family: 'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Menlo, Consolas, monospace;
     font-size: 12px;
     letter-spacing: 0.18em;
@@ -392,7 +267,8 @@
     font-weight: 700;
     display: inline-block;
     width: fit-content;
-    border-left: 6px solid var(--green);
+    border-left: 5px solid var(--green);
+    border-radius: 0 3px 3px 0;
   }
 
   h2 {
@@ -405,12 +281,7 @@
     text-transform: uppercase;
   }
 
-  .section-body {
-    display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 32px;
-  }
-
+  .section-body { display: grid; grid-template-columns: 180px 1fr; gap: 32px; }
   .section-body .spacer { display: block; }
   .section-content { max-width: 760px; }
 
@@ -420,11 +291,7 @@
   em { font-style: italic; }
 
   ul { list-style: none; margin-bottom: 18px; }
-  ul li {
-    padding-left: 26px;
-    position: relative;
-    margin-bottom: 10px;
-  }
+  ul li { padding-left: 26px; position: relative; margin-bottom: 11px; }
   ul li::before {
     content: "▸";
     position: absolute;
@@ -436,70 +303,52 @@
   a {
     color: var(--green);
     text-decoration: none;
-    border-bottom: 3px solid var(--green);
+    border-bottom: 2px solid var(--green);
     padding-bottom: 1px;
     font-weight: 500;
-    transition: background 0.15s ease;
+    transition: background 0.15s ease, color 0.15s ease;
   }
 
-  a:hover {
-    background-color: var(--green);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='1' y='0' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.4'/><rect x='3' y='2' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.4'/></svg>");
-    background-size: 4px 4px;
-    color: var(--paper);
-  }
+  a:hover { background: var(--green); color: #fff; }
 
   /* ========== 30/60/90 DASHBOARD ========== */
   .dashboard {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 0;
-    border: 4px solid var(--ink);
+    border: 3px solid var(--ink);
+    border-radius: 4px;
+    overflow: hidden;
     margin-top: 24px;
-    background: var(--paper);
+    background: var(--panel);
   }
 
   .phase {
     padding: 24px;
-    border-right: 4px solid var(--ink);
-    background: var(--paper);
+    border-right: 3px solid var(--ink);
+    background: var(--panel);
     position: relative;
   }
 
   .phase:last-child { border-right: none; }
 
-  /* Phase tops use progressive dither density — green getting denser through 30→60→90 */
-  .phase:nth-child(1)::before,
-  .phase:nth-child(2)::before,
-  .phase:nth-child(3)::before {
+  .phase::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 10px;
-    background-size: 4px 4px;
+    height: 6px;
+    background: var(--green);
   }
-
-  .phase:nth-child(1)::before {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%232e7d4f'/><rect x='2' y='2' width='1' height='1' fill='%232e7d4f'/></svg>");
-    background-color: var(--paper);
-  }
-
-  .phase:nth-child(2)::before {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%232e7d4f'/><rect x='2' y='1' width='1' height='1' fill='%232e7d4f'/><rect x='1' y='2' width='1' height='1' fill='%232e7d4f'/><rect x='3' y='3' width='1' height='1' fill='%232e7d4f'/></svg>");
-    background-color: var(--paper);
-  }
-
-  .phase:nth-child(3)::before {
-    background-color: var(--green);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='1' y='0' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.3'/><rect x='3' y='2' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.3'/></svg>");
-  }
+  .phase:nth-child(1)::before { opacity: 0.35; }
+  .phase:nth-child(2)::before { opacity: 0.65; }
+  .phase:nth-child(3)::before { opacity: 1; }
 
   .phase-header {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     padding-bottom: 14px;
-    border-bottom: 3px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
     margin-bottom: 18px;
     margin-top: 4px;
   }
@@ -507,7 +356,7 @@
   .phase-days {
     font-family: 'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Menlo, Consolas, monospace;
     font-size: 11px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.14em;
     color: var(--ink-faint);
     text-transform: uppercase;
     font-weight: 700;
@@ -515,7 +364,7 @@
 
   .phase-num {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-    font-size: 48px;
+    font-size: 46px;
     font-weight: 900;
     letter-spacing: -0.04em;
     line-height: 0.9;
@@ -532,35 +381,28 @@
     line-height: 1.2;
   }
 
-  .phase ul { font-size: 14px; line-height: 1.5; }
+  .phase ul { font-size: 14px; line-height: 1.55; margin-bottom: 0; }
   .phase ul li { margin-bottom: 12px; padding-left: 18px; }
   .phase ul li::before { font-size: 12px; color: var(--green); }
 
   .dashboard-footer {
-    border-top: 4px solid var(--ink);
+    border-top: 3px solid var(--ink);
     background: var(--ink);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='6' height='6' viewBox='0 0 6 6' shape-rendering='crispEdges'><rect x='1' y='1' width='1' height='1' fill='%232e7d4f' fill-opacity='0.4'/><rect x='4' y='4' width='1' height='1' fill='%232e7d4f' fill-opacity='0.4'/></svg>");
-    background-size: 6px 6px;
     color: var(--paper);
     padding: 18px 24px;
-    margin-top: -2px;
     font-family: 'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Menlo, Consolas, monospace;
     font-size: 13px;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     font-weight: 600;
     text-transform: uppercase;
-    line-height: 1.4;
+    line-height: 1.45;
   }
 
-  .dashboard-footer .flag {
-    color: var(--green);
-    margin-right: 10px;
-    font-size: 16px;
-  }
+  .dashboard-footer .flag { color: var(--green); margin-right: 10px; font-size: 16px; }
 
   @media (max-width: 800px) {
     .dashboard { grid-template-columns: 1fr; }
-    .phase { border-right: none; border-bottom: 4px solid var(--ink); }
+    .phase { border-right: none; border-bottom: 3px solid var(--ink); }
     .phase:last-child { border-bottom: none; }
   }
 
@@ -569,119 +411,102 @@
     display: grid;
     gap: 0;
     margin-top: 16px;
-    border-top: 3px solid var(--ink);
-    border-bottom: 3px solid var(--ink);
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    overflow: hidden;
   }
 
   .work-item {
-    padding: 24px 20px;
+    padding: 24px 22px;
     border-bottom: 2px solid var(--ink);
     display: grid;
-    grid-template-columns: 80px 1fr;
+    grid-template-columns: 70px 1fr;
     gap: 24px;
-    background: var(--paper);
+    background: var(--panel);
   }
 
   .work-item:last-child { border-bottom: none; }
 
-  /* Work numbers: progressive dither density — sparse to dense green */
   .work-num {
     font-family: 'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Menlo, Consolas, monospace;
-    font-size: 16px;
-    color: var(--paper);
+    font-size: 15px;
+    color: #fff;
+    background: var(--green);
     padding: 6px 10px;
+    border-radius: 3px;
     font-weight: 700;
     align-self: start;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     width: fit-content;
-    background-size: 4px 4px;
   }
-
-  .work-item:nth-child(1) .work-num {
-    background-color: var(--green);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.4'/><rect x='2' y='2' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.4'/></svg>");
-  }
-  .work-item:nth-child(2) .work-num {
-    background-color: var(--green);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%230a0a0a' fill-opacity='0.25'/><rect x='2' y='2' width='1' height='1' fill='%230a0a0a' fill-opacity='0.25'/></svg>");
-  }
-  .work-item:nth-child(3) .work-num {
-    background-color: var(--ink);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%232e7d4f'/><rect x='2' y='2' width='1' height='1' fill='%232e7d4f'/></svg>");
-  }
-  .work-item:nth-child(4) .work-num {
-    background-color: var(--ink);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%232e7d4f'/><rect x='2' y='1' width='1' height='1' fill='%232e7d4f'/><rect x='1' y='2' width='1' height='1' fill='%232e7d4f'/><rect x='3' y='3' width='1' height='1' fill='%232e7d4f'/></svg>");
-  }
+  .work-item:nth-child(even) .work-num { background: var(--ink); }
 
   .work-content p { margin: 0; }
 
-  /* ========== WHAT I'M NOT ========== */
-  .not-list {
+  /* ========== TWO-UP GRID ========== */
+  .grid-2 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 1fr;
     gap: 0;
-    border: 4px solid var(--ink);
-    margin-top: 16px;
+    border: 3px solid var(--ink);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 18px;
+    background: var(--panel);
   }
 
-  .not-item {
+  .cell {
     padding: 24px;
-    border-right: 4px solid var(--ink);
-    border-bottom: 4px solid var(--ink);
-    font-size: 15px;
-    line-height: 1.5;
-    background: var(--paper);
+    border-right: 3px solid var(--ink);
+    border-bottom: 3px solid var(--ink);
     display: flex;
     flex-direction: column;
   }
+  .cell:nth-child(2n) { border-right: none; }
+  .cell:nth-last-child(-n+2) { border-bottom: none; }
 
-  .not-item:nth-child(2n) { border-right: none; }
-  .not-item:nth-last-child(-n+2) { border-bottom: none; }
-
-  .not-item .not-tag {
+  .cell .tag {
     font-family: 'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Menlo, Consolas, monospace;
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--paper);
+    letter-spacing: 0.16em;
+    color: #fff;
     background: var(--ink);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='1' y='0' width='1' height='1' fill='%232e7d4f'/><rect x='3' y='2' width='1' height='1' fill='%232e7d4f'/></svg>");
-    background-size: 4px 4px;
-    padding: 6px 10px;
-    margin-bottom: 16px;
+    padding: 6px 11px;
+    border-radius: 3px;
+    margin-bottom: 14px;
     font-weight: 700;
     align-self: flex-start;
     border-left: 5px solid var(--green);
   }
-
-  .not-item .not-body { display: block; }
+  .cell .body { font-size: 15px; line-height: 1.55; }
 
   @media (max-width: 700px) {
-    .not-list { grid-template-columns: 1fr; grid-auto-rows: auto; }
-    .not-item { border-right: none; border-bottom: 4px solid var(--ink); }
-    .not-item:last-child { border-bottom: none; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .cell { border-right: none; border-bottom: 3px solid var(--ink); }
+    .cell:last-child { border-bottom: none; }
   }
+
+  .state h3 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 14px;
+  }
+  .state ul { font-size: 14px; margin-bottom: 0; }
+  .state ul li { padding-left: 18px; margin-bottom: 11px; }
 
   /* ========== COMP ========== */
   .comp-box {
-    border: 4px solid var(--ink);
-    padding: 32px;
+    border: 3px solid var(--ink);
+    border-radius: 4px;
+    padding: 34px;
     margin-top: 16px;
-    background: var(--paper);
+    background: var(--panel);
     position: relative;
-  }
-
-  /* Dithered green top bar instead of solid */
-  .comp-box::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 14px;
-    background-color: var(--green);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='1' y='0' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.25'/><rect x='3' y='2' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.25'/></svg>");
-    background-size: 4px 4px;
+    border-top: 12px solid var(--green);
   }
 
   .comp-stamp {
@@ -689,27 +514,24 @@
     top: 26px;
     right: 24px;
     background: var(--green);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='1' y='1' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.3'/><rect x='3' y='3' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.3'/></svg>");
-    background-size: 4px 4px;
-    color: var(--paper);
-    padding: 4px 10px;
+    color: #fff;
+    padding: 5px 11px;
+    border-radius: 3px;
     font-family: 'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Menlo, Consolas, monospace;
     font-size: 10px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     font-weight: 700;
-    border: 2px solid var(--ink);
   }
 
   .comp-range {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-    font-size: clamp(44px, 6vw, 72px);
+    font-size: clamp(40px, 6vw, 68px);
     font-weight: 900;
     letter-spacing: -0.035em;
     line-height: 0.95;
     color: var(--green);
     margin-bottom: 12px;
-    margin-top: 8px;
   }
 
   .comp-label {
@@ -718,32 +540,17 @@
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--ink-faint);
-    margin-bottom: 24px;
+    margin-bottom: 22px;
     font-weight: 700;
-    margin-top: 8px;
   }
 
   /* ========== CONTACT SECTION ========== */
   .contact-section {
     background: var(--ink);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='6' height='6' viewBox='0 0 6 6' shape-rendering='crispEdges'><rect x='1' y='1' width='1' height='1' fill='%232e7d4f' fill-opacity='0.25'/><rect x='4' y='4' width='1' height='1' fill='%232e7d4f' fill-opacity='0.25'/></svg>");
-    background-size: 6px 6px;
     color: var(--paper);
-    margin: 0 -32px -2px -32px;
-    padding: 48px 32px 56px;
-    border-top: 10px solid var(--green);
-    position: relative;
-  }
-
-  .contact-section::before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: 0; right: 0;
-    height: 10px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='10' viewBox='0 0 4 10' shape-rendering='crispEdges'><rect x='1' y='1' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.4'/><rect x='3' y='5' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.4'/><rect x='0' y='8' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.4'/></svg>");
-    background-size: 4px 10px;
-    background-color: var(--green);
+    margin: 0 -32px;
+    padding: 54px 32px 60px;
+    border-top: 8px solid var(--green);
   }
 
   .contact-section::after { display: none; }
@@ -757,8 +564,6 @@
 
   .contact-section .section-num-block {
     background: var(--paper);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='1' y='1' width='1' height='1' fill='%230a0a0a' fill-opacity='0.15'/><rect x='3' y='3' width='1' height='1' fill='%230a0a0a' fill-opacity='0.15'/></svg>");
-    background-size: 4px 4px;
     color: var(--ink);
     border-left-color: var(--green);
   }
@@ -766,82 +571,53 @@
   .contact-section h2 { color: var(--paper); }
   .contact-section .section-content { color: var(--paper); }
 
-  .contact-section a {
-    color: var(--paper);
-    border-bottom-color: var(--green);
-  }
-  .contact-section a:hover {
-    background-color: var(--green);
-    color: var(--paper);
-  }
+  .contact-section a { color: var(--paper); border-bottom-color: var(--green); }
+  .contact-section a:hover { background: var(--green); color: #fff; }
 
   .contact-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0;
     margin: 24px 0;
-    border: 4px solid var(--paper);
+    border: 3px solid var(--paper);
+    border-radius: 4px;
+    overflow: hidden;
   }
 
-  .contact-card {
-    padding: 20px 24px;
-    border-right: 4px solid var(--paper);
-  }
-
+  .contact-card { padding: 20px 24px; border-right: 3px solid var(--paper); }
   .contact-card:last-child { border-right: none; }
   .contact-card .label { color: var(--green); margin-bottom: 8px; }
   .contact-card a { font-size: 18px; font-weight: 500; word-break: break-all; }
 
   @media (max-width: 600px) {
     .contact-grid { grid-template-columns: 1fr; }
-    .contact-card { border-right: none; border-bottom: 4px solid var(--paper); }
+    .contact-card { border-right: none; border-bottom: 3px solid var(--paper); }
     .contact-card:last-child { border-bottom: none; }
   }
 
-  /* ========== RESPONSIVE ========== */
   @media (max-width: 700px) {
-    .section-header, .section-body {
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
+    .section-header, .section-body { grid-template-columns: 1fr; gap: 16px; }
     .section-body .spacer { display: none; }
-    section { padding: 36px 0; }
+    section { padding: 40px 0; }
     main { padding: 0 20px; }
-    .contact-section { margin: 0 -20px -2px -20px; padding: 36px 20px 48px; }
+    .contact-section { margin: 0 -20px; padding: 40px 20px 48px; }
   }
 
   /* ========== FOOTER ========== */
   footer.bottom {
     background: var(--ink);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='1' y='0' width='1' height='1' fill='%232e7d4f' fill-opacity='0.3'/><rect x='3' y='2' width='1' height='1' fill='%232e7d4f' fill-opacity='0.3'/></svg>");
-    background-size: 4px 4px;
-    color: rgba(245, 241, 232, 0.7);
-    padding: 28px 32px;
+    color: rgba(244, 245, 243, 0.7);
+    padding: 26px 32px;
     font-family: 'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Menlo, Consolas, monospace;
     font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     text-align: center;
-    border-top: 4px solid var(--green);
+    border-top: 3px solid var(--green);
     font-weight: 700;
-    position: relative;
   }
 
-  footer.bottom::before {
-    content: '';
-    position: absolute;
-    top: -4px; left: 0; right: 0;
-    height: 4px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' shape-rendering='crispEdges'><rect x='1' y='1' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.3'/><rect x='3' y='3' width='1' height='1' fill='%23f5f1e8' fill-opacity='0.3'/></svg>");
-    background-size: 4px 4px;
-    background-color: var(--green);
-  }
-
-  footer.bottom .sep {
-    color: var(--green);
-    margin: 0 12px;
-  }
-
+  footer.bottom .sep { color: var(--green); margin: 0 12px; }
 </style>
 </head>
 <body>
@@ -866,7 +642,7 @@
     </div>
     <div>
       <div class="name-block">
-        <span class="label">Operator · Fixer · Program Manager</span>
+        <span class="label">Builder-Operator · Chief of Staff · Head of Ops</span>
         <h1>Ryan J.<br>Murphy</h1>
       </div>
       <p class="lede">I understand <span class="underline">how I work</span>. So the job is to understand how <em>you</em> work, then make it work.</p>
@@ -878,7 +654,7 @@
       </div>
       <div class="readout-row"><span class="k">Status</span><span class="v v-green">Available</span></div>
       <div class="readout-row"><span class="k">Location</span><span class="v">Remote</span></div>
-      <div class="readout-row"><span class="k">Target</span><span class="v v-green">$150–200K</span></div>
+      <div class="readout-row"><span class="k">Target</span><span class="v v-green">$150K to $200K</span></div>
       <div class="readout-row"><span class="k">Notice</span><span class="v">2 wks</span></div>
     </div>
   </div>
@@ -903,16 +679,16 @@
 <section>
   <div class="section-header">
     <span class="section-num-block">01 // What I Am</span>
-    <h2>A fixer.</h2>
+    <h2>A builder who runs the operation.</h2>
   </div>
   <div class="section-body">
     <div class="spacer"></div>
     <div class="section-content">
-      <p>To a corporate VP, that looks like a <strong>Program Manager</strong> or <strong>Head of Operations</strong>. To a founder, it looks like a <strong>Chief of Staff</strong>. To a PE operating partner, it looks like a <strong>portfolio operator</strong>. Same person, different title.</p>
-      <p>Sometimes I'm boots on the ground. Sometimes I'm a well-intentioned Merlin.</p>
-      <p>The way I work: I want to understand the pain points at the individual level, see how people actually behave inside the current systems and processes, and figure out where the real strengths lie. Then I optimize the people and the tools you already have so the work that needs to get done actually gets done.</p>
-      <p>Assuming there are problems somewhere isn't naive — it's just honest. There are always problems. My job is to find the ones that matter and build the structure that lets the right people fix them.</p>
-      <p>I've done this in injection-molded manufacturing, enterprise SaaS implementation, and a 44-person hospitality operation through COVID. The industries don't matter much. The work is the same: get clarity, build the system, let the people who are great at the actual product do their job without the friction.</p>
+      <p>To a founder, I'm the <strong>Chief of Staff</strong> or the <strong>first ops hire</strong>. To a VP, a <strong>Program Manager</strong> or <strong>Head of Operations</strong>. To a PE operating partner, a <strong>portfolio operator</strong>. Same person, different title.</p>
+      <p>The short version: I run the operation, and I build the tools it runs on. When no software fit at my current company, I built our entire PMO platform in Claude Code and the whole company runs on it daily. One operator plus AI, doing what used to take a team. That is the leverage I bring, and it is why I don't need a big tooling budget to be effective.</p>
+      <p>The way I work: find how the operation actually behaves, not how the org chart says it does. Find what is really broken versus what people complain about. Build the structure that lets your best people ship without friction. Then get out of their way.</p>
+      <p>Assuming there are problems somewhere isn't pessimism. It's just honest. There are always problems. My job is to find the ones that matter and kill them.</p>
+      <p>I've done this in manufacturing, enterprise SaaS, and a 44-person operation through COVID. The industry doesn't matter much. The work is the same.</p>
     </div>
   </div>
 </section>
@@ -925,49 +701,49 @@
   <div class="section-body">
     <div class="spacer"></div>
     <div class="section-content">
-      <p>Generic in shape. Specific to how I actually work.</p>
+      <p>Generic in shape, specific to how I work. At a 2,000-person company this is 90 days. At your startup, compress it to weeks. The sequence holds, the clock just speeds up: see clearly, build the system, make it durable.</p>
 
       <div class="dashboard">
         <div class="phase">
           <div class="phase-header">
-            <span class="phase-days">Days 01—30</span>
+            <span class="phase-days">Phase 1</span>
             <span class="phase-num">30</span>
           </div>
           <h3>Listen, Read, Map</h3>
           <ul>
-            <li>1:1 with every leader and most senior ICs. Open-ended questions. Notes, not positions.</li>
-            <li>Read everything: status reports, board materials, escalations, the last 90 days of leadership comms.</li>
-            <li>Map what the org <em>thinks</em> is happening vs. what's actually happening. The gap is usually the work.</li>
-            <li>ID the 3–5 fires that are real, the 3–5 that are perception, and the 1–2 structural issues no one's named.</li>
-            <li>Deliver a written read of the operating picture. No recommendations yet. Just a clearer picture than day one.</li>
+            <li>1:1 with every leader and most senior ICs. Real questions. Notes, not positions.</li>
+            <li>Read whatever exists. Status, escalations, the threads where the real decisions happen.</li>
+            <li>Map what the org <em>thinks</em> is happening against what's actually happening. The gap is usually the work.</li>
+            <li>Name the fires that are real, the ones that are only perception, and the structural issues no one has said out loud.</li>
+            <li>Deliver a written read of the operating picture. No fixes yet. Just a clearer picture than day one.</li>
           </ul>
         </div>
 
         <div class="phase">
           <div class="phase-header">
-            <span class="phase-days">Days 31—60</span>
+            <span class="phase-days">Phase 2</span>
             <span class="phase-num">60</span>
           </div>
           <h3>Build Cadence &amp; Visibility</h3>
           <ul>
-            <li>Establish or sharpen the operating rhythm: which meetings exist, who runs them, what's tracked, what's decided.</li>
-            <li>Stand up the reporting leadership <em>actually needs</em> — not what they think they want. Single source of truth.</li>
-            <li>Begin the conversations on structural issues, with options not opinions. Make tradeoffs legible.</li>
-            <li>Start removing the friction quietly eating people's weeks. Usually 3–4 small process changes nobody had time to make.</li>
+            <li>Establish the operating rhythm. Which meetings exist, who runs them, what's tracked, what's decided.</li>
+            <li>Stand up the reporting leadership <em>actually needs</em>, not what they think they want. A single source of truth.</li>
+            <li>Open the structural conversations with options, not opinions. Make the tradeoffs legible.</li>
+            <li>Start killing the friction quietly eating people's weeks. Usually a handful of changes nobody had time to make.</li>
           </ul>
         </div>
 
         <div class="phase">
           <div class="phase-header">
-            <span class="phase-days">Days 61—90</span>
+            <span class="phase-days">Phase 3</span>
             <span class="phase-num">90</span>
           </div>
-          <h3>Make Machine Durable</h3>
+          <h3>Make The Machine Durable</h3>
           <ul>
-            <li>Hand off as much of the cadence as makes sense to the people whose job it actually is.</li>
-            <li>Goal isn't to be indispensable — it's to make the system durable.</li>
-            <li>Bring leadership a 1-page strategic operating plan grounded in what I've seen.</li>
-            <li>Decide what my next 90 days look like. By day 90, the picture of what the role <em>should</em> be is clearer than at hire.</li>
+            <li>Hand off the cadence to the people whose job it actually is.</li>
+            <li>The goal isn't to be indispensable. It's to make the system run without me.</li>
+            <li>Bring leadership a one-page operating plan grounded in what I've seen.</li>
+            <li>Decide what the next stretch looks like. By now the shape of the role is clearer than at hire.</li>
           </ul>
         </div>
       </div>
@@ -990,30 +766,30 @@
       <div class="work-grid">
 
         <div class="work-item">
-          <div class="work-num">→ 01</div>
+          <div class="work-num">01</div>
           <div class="work-content">
-            <p><strong>Built and shipped an internal PMO platform</strong> in React using Claude Code — replacing scattered files, threads, and individual memories with a single source of truth across projects, decisions, risks, and customer commitments. Now powers the operating cadence for a multi-program portfolio with two flagship engagements worth roughly <strong>$10M</strong> in customer-committed work.</p>
+            <p><strong>Built and shipped an internal PMO platform</strong> in React using Claude Code. Replaced scattered files, threads, and individual memories with a single source of truth across projects, decisions, risks, and customer commitments. It now powers the operating cadence for an <strong>11-program, 21-project</strong> portfolio, including a flagship program projected to generate roughly <strong>$40K/day</strong> in production revenue once complete.</p>
           </div>
         </div>
 
         <div class="work-item">
-          <div class="work-num">→ 02</div>
+          <div class="work-num">02</div>
           <div class="work-content">
-            <p><strong>Restored three at-risk enterprise customer accounts within my first six months</strong> during chronic execution delays — became the single, anticipatory point of contact, answered questions before they were asked, presented solution paths with clear tradeoffs, and made the customer's team look good to their own leadership.</p>
+            <p><strong>Helped pull several at-risk enterprise accounts back on track</strong> during chronic execution delays, including a stalled <strong>~$100K</strong> account I personally brought back. Became the single, anticipatory point of contact, answered questions before they were asked, presented solution paths with clear tradeoffs, and made the customer's team look good to their own leadership.</p>
           </div>
         </div>
 
         <div class="work-item">
-          <div class="work-num">→ 03</div>
+          <div class="work-num">03</div>
           <div class="work-content">
             <p><strong>Held 98% of pre-restriction hourly revenue</strong> and retained <strong>42 of 44 employees</strong> as General Manager of a 44-person, $3M/year hospitality operation through COVID. Rewrote the operating playbook in real time. Treated music, lighting, and service flow as performance variables, not afterthoughts.</p>
           </div>
         </div>
 
         <div class="work-item">
-          <div class="work-num">→ 04</div>
+          <div class="work-num">04</div>
           <div class="work-content">
-            <p><strong>Negotiated $300K in additional scope</strong> on a $2M, 15-month enterprise SaaS implementation through structured change requests — without disrupting delivery cadence. Got invited by the software company's VP to present at their town hall after that engagement.</p>
+            <p><strong>Negotiated $300K in additional scope</strong> on a $2M, 15-month enterprise SaaS implementation through structured change requests, without disrupting delivery cadence. After that engagement, the software company's VP invited me to present at their town hall.</p>
           </div>
         </div>
 
@@ -1024,28 +800,101 @@
 
 <section>
   <div class="section-header">
-    <span class="section-num-block">04 // What I'm Not</span>
+    <span class="section-num-block">04 // Deep Dive</span>
+    <h2>I built a way to see a project failing before the project knows.</h2>
+  </div>
+  <div class="section-body">
+    <div class="spacer"></div>
+    <div class="section-content">
+
+      <p>Every status report is a lagging indicator. Schedule variance, budget, percent complete. They only tell you what has gone wrong once it is already visible enough to admit. By then the system underneath has already paid for it.</p>
+
+      <p>So I built the <strong>Systemic Vitality Index</strong>. It measures the health of the execution system, not the performance of the project. It reads the system underneath the work and tells me whether that system can still produce reliable outcomes, before the schedule moves. It is grounded in systems thinking and quality management, in the lineage of Deming, Juran, and Senge. It was not invented from a blank page.</p>
+
+      <p>It scores four leading signals of execution health. Each one is a distinct way a system quietly fails.</p>
+
+      <div class="grid-2">
+        <div class="cell">
+          <span class="tag">Decision Speed</span>
+          <div class="body">Can the team turn ambiguity into a committed decision fast enough to keep work flowing? Slow alignment is hidden drag.</div>
+        </div>
+        <div class="cell">
+          <span class="tag">Repeat Problems</span>
+          <div class="body">Is the same failure recurring? If it is, the system is <em>producing</em> the problem, not encountering it. That is structural, not noise.</div>
+        </div>
+        <div class="cell">
+          <span class="tag">Info Freshness</span>
+          <div class="body">Are people coordinating off current reality, or off an expired version of it? Stale inputs quietly poison good decisions.</div>
+        </div>
+        <div class="cell">
+          <span class="tag">Early Warning</span>
+          <div class="body">Does bad news travel early enough to act on, or does it arrive as a surprise? A green dashboard built on silence is not health.</div>
+        </div>
+      </div>
+
+      <p style="margin-top: 28px;"><strong>A dashboard tells you what happened. The SVI tells you what is about to.</strong> The difference is in the design.</p>
+
+      <ul>
+        <li><strong>It diagnoses and prescribes.</strong> Every score comes with a read in plain English and a specific next action, not just a number.</li>
+        <li><strong>It separates confidence from score.</strong> A quiet team that logs nothing does not get to look healthy. Low data means low confidence, not high health.</li>
+        <li><strong>It punishes chronic over acute.</strong> A problem that recurs for four weeks hurts far more than one bad week, because recurrence is structural and a bad week is noise.</li>
+        <li><strong>It resists gaming.</strong> You cannot make it green by hiding reality, logging trivia early, or renaming the same issue. The resistance is built in from the start, because a health score people can fake is worse than no score at all.</li>
+      </ul>
+
+      <div class="grid-2">
+        <div class="cell state">
+          <span class="tag">Running Now</span>
+          <h3>What it does today</h3>
+          <ul>
+            <li>Runs weekly across a live program portfolio.</li>
+            <li>Collapses a wall of status into one number, a band from Strong to Critical, a written diagnosis, and a recommended action.</li>
+            <li>Trends over time, so I read the direction, not a snapshot.</li>
+            <li>Has flagged programs as <em>fragile</em> while their formal status still read green. That early read is the entire point.</li>
+          </ul>
+        </div>
+        <div class="cell state">
+          <span class="tag">Where It Goes</span>
+          <h3>The ideal state</h3>
+          <ul>
+            <li>A standalone engine any operator can point at any portfolio.</li>
+            <li>A pattern library, so the system recognizes what fragility looked like the last ten times, before it became failure.</li>
+            <li>Predictive. Name the project that will slip, and the week it will start, before anyone on it feels it.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="dashboard-footer" style="border:3px solid var(--ink); border-radius:4px; margin-top:18px;">
+        <span class="flag">⚑</span> The scoring model underneath, the weighting, the chronicity curves, the resistance to gaming, stays offline. That is the moat. What is here is what it does and why it works. If you want to watch it run, that is a conversation.
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-header">
+    <span class="section-num-block">05 // What I'm Not</span>
     <h2>The honest list.</h2>
   </div>
   <div class="section-body">
     <div class="spacer"></div>
     <div class="section-content">
-      <div class="not-list">
-        <div class="not-item">
-          <div class="not-tag">▲ Not a Founder</div>
-          <div class="not-body">I had to think about it. I figured out I'm not. I do my best work organizing someone else's vision.</div>
+      <div class="grid-2">
+        <div class="cell">
+          <span class="tag">▲ Not an Engineer</span>
+          <div class="body">I won't architect your production system or pass a coding interview. But I build the internal tools, dashboards, and automations I need to run the operation, in Claude Code, today, without waiting on eng. I build enough to see clearly and to take work off your team's plate.</div>
         </div>
-        <div class="not-item">
-          <div class="not-tag">▲ Not Deeply Technical</div>
-          <div class="not-body">I know enough to build what I need to see clearly — which then reveals what really needs to happen so the <em>real</em> technical work can get done. I understand the technical work enough to support it. The brains doing the actual engineering do the actual work. My job is to make sure they only have to worry about doing it.</div>
+        <div class="cell">
+          <span class="tag">▲ Not a Founder</span>
+          <div class="body">I thought hard about it. I'm not one, and I don't want to be. I do my best work turning someone else's vision into a running machine. You won't lose me to my own startup in eight months.</div>
         </div>
-        <div class="not-item">
-          <div class="not-tag">▲ Not Performatively Urgent</div>
-          <div class="not-body">The work moves at the speed of clarity, and clarity is what I bring. Hustle culture works until it doesn't — I come in after, to build something more durable.</div>
+        <div class="cell">
+          <span class="tag">▲ Not a Process Zealot</span>
+          <div class="body">I don't add process for its own sake. The goal is throughput, not a beautiful Notion. If a meeting or a doc isn't earning its place, I kill it.</div>
         </div>
-        <div class="not-item">
-          <div class="not-tag">▲ Not Chasing Founder Seats</div>
-          <div class="not-body">I want the operator seat. Not a founder-track role disguised as an operator-track role.</div>
+        <div class="cell">
+          <span class="tag">▲ Not Performatively Urgent</span>
+          <div class="body">I won't perform busyness or brag about hours. The work moves at the speed of clarity. I come in to make things calmer and more durable, not louder.</div>
         </div>
       </div>
     </div>
@@ -1054,7 +903,7 @@
 
 <section>
   <div class="section-header">
-    <span class="section-num-block">05 // Comp</span>
+    <span class="section-num-block">06 // Comp</span>
     <h2>Compensation target, openly.</h2>
   </div>
   <div class="section-body">
@@ -1063,9 +912,9 @@
       <div class="comp-box">
         <span class="comp-stamp">Base Target</span>
         <div class="comp-label">USD · Annual · Base Salary</div>
-        <div class="comp-range">$150K – $200K</div>
-        <p>The number matters because I work primarily to support my family — a salary that does that without anxiety is what makes me steady, present, and good at the rest of my life. That's not a threshold I'm precious about; it's a calibration. If the role and the people are right and the package is creative, we'll find the conversation.</p>
-        <p>Comp isn't the only signal I'm reading though. I work to earn and to learn. The places where both are on offer tend to be the ones worth saying yes to.</p>
+        <div class="comp-range">$150K to $200K</div>
+        <p>The number matters because I work to support my family. A salary that clears that without anxiety is what keeps me steady and long-term, which is exactly what you want in an ops hire. It's a calibration, not a wall. If the role and the people are right and you want to get creative with equity, we'll find the conversation.</p>
+        <p>Comp isn't the only signal I'm reading. I work to earn and to learn, and the places where both are on offer tend to be the ones worth saying yes to.</p>
       </div>
     </div>
   </div>
@@ -1073,7 +922,7 @@
 
 <section class="contact-section">
   <div class="section-header">
-    <span class="section-num-block">06 // Reach Me</span>
+    <span class="section-num-block">07 // Reach Me</span>
     <h2>Continue the conversation.</h2>
   </div>
   <div class="section-body">
@@ -1089,7 +938,7 @@
           <a href="https://www.linkedin.com/in/rymu219/" target="_blank" rel="noopener">in/rymu219</a>
         </div>
       </div>
-      <p>If you think you need someone like me — even if you're not sure — let's have a 20 minute conversation. Better to know quickly than hesitate. Best of luck.</p>
+      <p>If you think you need someone like me, even if you're not sure, let's grab twenty minutes. Better to know quickly than to sit and wonder. Best of luck.</p>
     </div>
   </div>
 </section>
@@ -1100,5 +949,4 @@
   R.J.M.<span class="sep">//</span>Murphy Operations<span class="sep">//</span>v.06.2026
 </footer>
 
-</body>
-</html>
+</body></html>
