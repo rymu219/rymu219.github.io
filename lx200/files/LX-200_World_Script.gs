@@ -1,6 +1,9 @@
 /**
+ * @OnlyCurrentDoc
+ */
+/**
  * LX-200 World: reset, deliver Message 67, and a read-only feed for the demo hub.
- * Paste into Extensions > Apps Script in the LX-200 World Google Sheet.
+ * Lives inside your copy of the LX-200_World sheet. It can only see that one sheet.
  * Fictional practice data only.
  */
 const LIVE_TABS = ['Inbox','Team chat','Gates','Schedule','Budget & Hours','Payments','Documents','RAID','Contacts'];
