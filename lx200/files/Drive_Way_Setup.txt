@@ -1,0 +1,81 @@
+THE DRIVE WAY: SET UP A BOT FROM A JOB DESCRIPTION FILE
+Take-home steps from "Your Project Already Told You It Would Slip" (Ryan Murphy)
+
+This is how Ryan runs his own Bots. Instead of pasting a prompt, each Bot's job description is a file in Google
+Drive. Setup is one line, and changing how a Bot works means editing the file.
+
+About 20 minutes. Everything in the practice pack is fictional.
+
+
+BEFORE YOU START
+- Use a personal or test Google account. A company account may block the connection or need IT approval.
+- Read the permission screen. To read files, Grok's Drive connection asks for "see, edit, create and delete all
+  your Google Drive files." Decide whether you're comfortable with that for this account. If not, use a fresh
+  test account, or stay with the paste-it-in way.
+- Move anything private out of that Drive first, or accept that your Bots can read it. Your instructions tell a
+  Bot where to look; they don't lock anything.
+
+
+1. MAKE YOUR OWN COPY OF THE WORLD
+   a. In your Google Drive, create a folder named:  LX-200 World
+   b. Open the practice folder. For each of these, right-click > Make a copy, then move the copy into your folder
+      and remove "Copy of" from the name:
+      - LX-200_World (the sheet)
+      - Hengtai_Quotation_LX-200.pdf
+      - LX-200_Drawing_RevB_SIGNED.pdf
+      - LX-200_Drawing_RevC.pdf
+      - Scout instructions.txt, Ledger instructions.txt, Foreman instructions.txt
+   c. In your copy of LX-200_World, open the Findings tab and delete every row below the header.
+      If the Inbox tab has a message 67, delete that row too.
+   d. In each instructions file, replace "Ryan" with your name, and LX Scout / LX Ledger / LX Foreman with the
+      names you'll give your Bots. Each file checks that it's loaded into the right Bot, and Foreman finds its
+      teammates by name.
+
+2. CONNECT GOOGLE IN GROK BOT
+   a. Open Connect apps. Add Google Sheets, click Authorize, sign in, and approve.
+   b. Do the same for Google Drive. Sheets and Drive connect separately.
+   c. If it also asks for Calendar or anything else you don't need, say no. Grant only what the Bot needs.
+   d. Check that both show as Installed.
+
+3. CREATE THE BOTS (ONE LINE EACH)
+   Create a new Bot and send, as its first message:
+
+   You're Scout. Your job description is the file "Scout instructions.txt" in the Google Drive folder
+   "LX-200 World". Read it, follow it from now on, and remember it. Then tell me in three lines what your job is
+   and which files you're allowed to open.
+
+   Do the same for Ledger and Foreman, changing the name and the file.
+   A good answer lists the LX-200_World sheet, the three PDFs and its own instructions file, and says the only
+   change it may make is adding rows to the Findings tab.
+
+4. RUN THE TEAM (ONE LINE, TO FOREMAN)
+   Foreman: "Run the team."
+   Foreman messages Scout and Ledger, waits until both have posted to Findings, then writes the brief.
+   If a teammate never answers, send that Bot "Run your review" yourself, then tell Foreman "Both have posted."
+   Compare what they find with the checkpoint slides.
+
+5. ADD MESSAGE 67 YOURSELF
+   a. Open Build_Along_Bot_Prompts.txt in the practice folder and find MESSAGE 67.
+   b. In your LX-200_World sheet, add it as a new row at the bottom of the Inbox tab
+      (Message 67, Nov 23, 2026, From, To, Subject, and the body).
+   c. Foreman: "A new message came in."  It tells Scout and Ledger to check, waits for their NEW rows, and updates
+      the brief.
+   Watch for the rows that start with "NEW: ".
+
+6. CHANGE HOW A BOT WORKS
+   Edit its instructions file in Drive, then tell the Bot: "Reload your instructions."
+
+7. WHEN YOU'RE DONE
+   Remove Grok's access to your Google account at myaccount.google.com/permissions, or keep it if you'll keep
+   using it. Approvals in Grok Bot are the control; instructions are not.
+
+
+WHY THE LANES
+Each file says what the Bot's job is, what is NOT its job, and what to do when an input is missing. Without that,
+a Bot that's missing an input quietly does another Bot's work, and you can't tell which finding came from where.
+And loading a file replaces a Bot's job, so each file checks it's in the right Bot first.
+
+USING IT ON YOUR OWN WORK
+- Swap the sheet for your own: an Inbox tab (or a connected inbox), your board tabs, and a Findings tab.
+- Keep the file list in each instructions file exact. "Open only these files" beats "anything in the folder."
+- Keep the one-change rule: Bots add rows to Findings and change nothing else. You decide what happens next.

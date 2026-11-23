@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LX-200 Build-Along Hub</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<style>
+:root{--night:#05192D;--night2:#0E2238;--nrule:#22344F;--paper:#F4F1EA;--card:#fff;--ink:#15171A;--body:#3A3D42;--muted:#5A5D63;--rule:#E2DDD2;--navy:#22345A;--navyl:#9DB0D6;--risk:#B02A20;--warn:#9A5B12;--ok:#1E7349;--sel:#E8EDF6}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden}
+body{font-family:Roboto,Arial,sans-serif;color:var(--body);background:var(--paper);font-size:15px}
+button{font:inherit;cursor:pointer}
+.bar{height:48px;display:flex;align-items:center;gap:6px;padding:0 14px;background:var(--night);color:#DDE3EC}
+.brand{font-weight:500;font-size:14px;letter-spacing:.02em;margin-right:14px;color:#fff}
+.brand span{color:var(--navyl);font-weight:400}
+.tab{background:none;border:none;color:#A3AEBF;padding:8px 14px;border-radius:4px;font-size:14px;display:flex;gap:8px;align-items:center}
+.tab kbd{font-family:'Roboto Mono',monospace;font-size:11px;border:1px solid #33465F;border-radius:3px;padding:0 5px;color:#7F8DA3}
+.tab.on{background:#18304D;color:#fff}
+.tab.on kbd{border-color:#5B7194;color:#C9D4E6}
+.bar .sp{flex:1}
+.hint{font-size:12px;color:#7F8DA3}
+.view{position:absolute;top:48px;left:0;right:0;bottom:0;display:none}
+.view.on{display:block}
+/* live world */
+.badge{background:#E5483B;color:#fff;border-radius:9px;font-size:11px;font-weight:700;padding:0 6px;display:none}
+.badge.on{display:inline-block}
+.conn{font-size:12px;color:#7F8DA3;border:1px solid #2F4C74;border-radius:12px;padding:3px 10px;white-space:nowrap}
+.conn.live{color:#BFE8D2;border-color:#2F7A55}
+.conn.live::before{content:'● ';color:#4ADE80}
+.conn.err{color:#F6C9C4;border-color:#8A3B33}
+#v-chat{background:#fff}
+#v-chat.on{display:grid;grid-template-columns:220px minmax(0,1fr)}
+.cside{background:#F1EEE6;border-right:1px solid var(--rule);padding:16px 10px}
+.cside .ch{padding:7px 12px;border-radius:4px;font-size:14px;color:var(--ink);background:#DCE3EF;font-weight:500}
+.cside .wk{font-size:12px;color:var(--muted);padding:4px 12px 14px}
+.cmain{display:flex;flex-direction:column;min-height:0;height:100%}
+.chead{padding:14px 24px;border-bottom:1px solid var(--rule);font-weight:500;color:var(--ink);font-size:16px}
+.chead small{font-weight:400;color:var(--muted);margin-left:8px}
+.cmsgs{overflow:auto;padding:10px 24px 30px;flex:1}
+.cday{font-size:12px;color:var(--muted);text-align:center;margin:18px 0 6px;font-weight:500}
+.cm{display:flex;gap:12px;padding:6px 0;align-items:flex-start}
+.av{width:36px;height:36px;border-radius:6px;background:var(--navy);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+.cm b{color:var(--ink);font-weight:700;font-size:15px}
+.cm .tx{font-size:15px;line-height:1.5;color:var(--ink);margin-top:2px}
+#v-live{background:var(--night);color:#DDE3EC;overflow:auto}
+.lhead{display:flex;align-items:center;gap:18px;padding:18px 26px 8px;flex-wrap:wrap}
+.lhead h2{font-size:26px;font-weight:300;color:#fff;margin:0;flex:1}
+.lhead .lc b{font-size:24px;font-weight:300;color:#fff;margin-right:6px}
+.lhead .lc{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#7F8DA3}
+.lcols{display:grid;gap:18px;padding:10px 26px 30px}
+.lcol h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--navyl);margin:8px 0 10px;display:flex;justify-content:space-between}
+.lf{background:var(--night2);border:1px solid var(--nrule);border-left:4px solid #6A7A92;border-radius:5px;padding:12px 14px;margin-bottom:10px;font-size:14px;line-height:1.45}
+.lf.r{border-left-color:var(--risk)}.lf.ok{border-left-color:var(--ok)}.lf.aw{border-left-color:#C9A26B}
+.lf.new{animation:glow 2.4s ease}
+@keyframes glow{0%{box-shadow:0 0 0 3px rgba(157,176,214,.9);transform:translateY(-4px)}100%{box-shadow:0 0 0 0 rgba(157,176,214,0)}}
+.lf .top{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.lf .st{font-family:'Roboto Mono',monospace;font-size:11px;padding:1px 6px;border:1px solid #6A7A92}
+.lf.r .st{background:var(--risk);border-color:var(--risk);color:#fff}
+.lf .tm{font-size:11px;color:#7F8DA3;margin-left:auto}
+.lf .ev{font-size:12px;color:#9AA8BC;margin-top:6px}
+.lempty{padding:40px 26px;color:#7F8DA3;font-size:16px}
+.setcard{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:14px 16px;margin:14px 0 20px;font-size:13px;color:var(--muted)}
+.setcard b{color:var(--ink)}
+.setcard input{font:inherit;font-size:12px;padding:6px 8px;border:1px solid var(--rule);border-radius:4px;width:100%;margin:4px 0 8px;box-sizing:border-box}
+.setcard .row2{display:flex;gap:8px;flex-wrap:wrap}
+.setcard button{background:var(--ink);color:#fff;border:none;border-radius:4px;padding:7px 12px;font-size:13px}
+.setcard button.warn{background:var(--risk)}
+.cmodal{position:fixed;inset:0;background:rgba(5,25,45,.6);display:none;align-items:center;justify-content:center;z-index:50}
+.cmodal.on{display:flex}
+.cmodal>div{background:#fff;border-radius:6px;padding:22px 24px;max-width:420px}
+.cmodal p{color:var(--ink);margin:0 0 16px;font-size:15px;line-height:1.45}
+.cmodal button{border:none;border-radius:4px;padding:8px 14px;font-size:14px;margin-right:8px;background:var(--risk);color:#fff}
+.cmodal #cno{background:#E8E4DA;color:var(--ink)}
+
+/* examples + pen */
+.ex{display:flex;gap:6px;align-items:center;margin-left:10px;overflow:hidden}
+.ex .exl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#7F8DA3;margin-right:2px}
+.chip{background:#18304D;border:1px solid #2F4C74;color:#DDE3EC;padding:5px 11px;border-radius:14px;font-size:12.5px;white-space:nowrap}
+.chip:hover{background:#21406A;border-color:var(--navyl)}
+.chip.back{background:var(--navyl);color:var(--night);border-color:var(--navyl);font-weight:500}
+.pen{background:none;border:1px solid #2F4C74;color:#A3AEBF;padding:5px 10px;border-radius:4px;font-size:12px}
+.pen.on{background:#E5483B;border-color:#E5483B;color:#fff}
+#ink{position:fixed;left:0;top:48px;right:0;bottom:0;z-index:25;pointer-events:none;touch-action:none}
+#ink.on{pointer-events:auto;cursor:crosshair}
+.lb .imgs{display:flex;gap:24px;align-items:center;justify-content:center;max-width:100%;max-height:100%}
+.lb figure{margin:0;display:flex;flex-direction:column;align-items:center;max-height:calc(100vh - 80px);min-width:0}
+.lb figure img{max-height:calc(100vh - 120px);max-width:100%}
+.lb figcaption{color:#DDE3EC;font-size:14px;margin-top:10px}
+/* slides */
+#v-slides{background:#0B0D10}
+#v-slides img{position:absolute;inset:0;margin:auto;max-width:100%;max-height:100%;width:auto;height:auto;display:block}
+#v-slides .hot{position:absolute;top:0;bottom:0;width:30%;cursor:pointer}
+#v-slides .hot.l{left:0}#v-slides .hot.r{right:0}
+/* inbox */
+#v-inbox{display:none;grid-template-columns:220px 470px minmax(0,1fr);background:#F7F6F2}
+#v-inbox.on{display:grid}
+.side{padding:14px 10px;border-right:1px solid var(--rule);background:#F1EEE6}
+.acct{font-size:12px;color:var(--muted);padding:2px 10px 14px;line-height:1.4}
+.acct b{color:var(--ink);font-weight:500;display:block;font-size:14px}
+.fold{display:flex;justify-content:space-between;padding:8px 12px;border-radius:0 16px 16px 0;font-size:14px;color:var(--ink);cursor:pointer}
+.fold.on{background:#DCE3EF;font-weight:500}
+.fold span{color:var(--muted);font-size:12px}
+.lab{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:16px 12px 6px}
+.deliver{margin:22px 10px 0;width:calc(100% - 20px);background:none;border:1px dashed #B9B2A3;color:var(--muted);padding:8px;border-radius:4px;font-size:12px}
+.deliver:hover{border-color:var(--navy);color:var(--navy)}
+.deliver[disabled]{opacity:.45;cursor:default}
+.list{border-right:1px solid var(--rule);display:flex;flex-direction:column;min-height:0;height:100%}
+.search{padding:10px;border-bottom:1px solid var(--rule)}
+.search input{width:100%;padding:9px 12px;border:1px solid var(--rule);border-radius:20px;background:#fff;font:inherit;font-size:14px}
+.rows{overflow:auto;flex:1}
+.row{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 14px;border-bottom:1px solid #ECE8DF;cursor:pointer;background:#fff}
+.row:hover{background:#FAF9F6}
+.row.sel{background:var(--sel);box-shadow:inset 3px 0 0 var(--navy)}
+.row .fr{font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .dt{font-size:12px;color:var(--muted);text-align:right}
+.row .su{grid-column:1/3;font-size:13px;color:var(--body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .su b{color:var(--ink);font-weight:500}
+.row.unread .fr,.row.unread .su b{font-weight:700}
+.row .clip{font-size:11px;color:var(--muted);margin-left:6px}
+.newchip{background:var(--risk);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;margin-right:6px;letter-spacing:.04em}
+.read{overflow:auto;padding:26px 34px;background:#fff;height:100%}
+.read h2{font-size:24px;font-weight:400;color:var(--ink);margin:0 0 16px;line-height:1.3}
+.hdr{display:grid;grid-template-columns:70px 1fr auto;gap:4px 10px;font-size:13px;color:var(--muted);padding-bottom:16px;border-bottom:1px solid var(--rule)}
+.hdr b{color:var(--ink);font-weight:500}
+.mnum{font-family:'Roboto Mono',monospace;font-size:12px;color:var(--muted);text-align:right}
+.body{white-space:pre-wrap;font-size:15px;line-height:1.6;color:var(--ink);padding:18px 0}
+.atts{display:flex;gap:10px;flex-wrap:wrap;padding-top:8px;border-top:1px solid var(--rule)}
+.att{display:flex;align-items:center;gap:8px;border:1px solid var(--rule);border-radius:4px;padding:8px 12px;font-size:13px;background:#FAF9F6;color:var(--ink)}
+.att.open{cursor:pointer;border-color:#AFC0DC;background:#F2F5FA}
+.att.open:hover{border-color:var(--navy)}
+.att .ic{font-family:'Roboto Mono',monospace;font-size:10px;font-weight:500;background:var(--risk);color:#fff;padding:2px 4px;border-radius:2px}
+.att.na{opacity:.55}
+.att.na small{color:var(--muted)}
+.toast{visibility:hidden;position:fixed;right:24px;bottom:24px;background:var(--ink);color:#fff;padding:14px 18px;border-radius:6px;box-shadow:0 8px 28px rgba(0,0,0,.25);font-size:14px;max-width:420px;transform:translateY(140%);transition:transform .35s ease;z-index:30;cursor:pointer}
+.toast.on{transform:none;visibility:visible}
+.toast small{display:block;color:#A3AEBF;margin-bottom:3px;font-size:12px}
+.lb{position:fixed;inset:0;background:rgba(5,25,45,.82);display:none;align-items:center;justify-content:center;z-index:40;padding:30px}
+.lb.on{display:flex}
+.lb img{max-width:100%;max-height:100%;box-shadow:0 10px 40px rgba(0,0,0,.4);background:#fff}
+.lb .x{position:absolute;top:16px;right:20px;color:#fff;background:none;border:1px solid #6A7A92;border-radius:4px;padding:6px 12px}
+/* hood */
+#v-hood{background:var(--night);color:#DDE3EC}
+#v-hood.on{display:grid;grid-template-rows:auto minmax(0,1fr)}
+.hhead{display:flex;align-items:center;gap:10px;padding:12px 20px;border-bottom:1px solid var(--nrule);flex-wrap:wrap}
+.disc{font-size:12px;color:#7F8DA3;flex-basis:100%;order:9}
+.ph{background:none;border:1px solid #2A4060;color:#A3AEBF;padding:6px 12px;border-radius:16px;font-size:13px}
+.ph.on{background:var(--navyl);color:var(--night);border-color:var(--navyl);font-weight:500}
+.ph.done{color:#DDE3EC;border-color:#3D5578}
+.ph[disabled]{opacity:.35;cursor:default}
+.ctl{background:#18304D;border:1px solid #2A4060;color:#fff;padding:6px 14px;border-radius:4px;font-size:13px}
+.ctl.play{background:var(--navyl);color:var(--night);border-color:var(--navyl);font-weight:500;min-width:84px}
+.hood{display:grid;grid-template-columns:300px minmax(0,1fr) 420px;min-height:0}
+.stream{border-right:1px solid var(--nrule);overflow:auto;padding:8px 0}
+.sr{display:flex;gap:8px;align-items:center;padding:3px 14px;font-size:12px;color:#5D6C83;white-space:nowrap}
+.sr .nn{font-family:'Roboto Mono',monospace;width:22px;text-align:right;flex:none}
+.sr .ss{overflow:hidden;text-overflow:ellipsis;flex:1}
+.sr .vv{font-size:10px;font-weight:700;letter-spacing:.04em;flex:none}
+.sr.skip{color:#3F4E63}.sr.skip .ss{text-decoration:none}
+.sr.ruled{color:#C9A26B}.sr.ruled .ss{text-decoration:line-through}
+.sr.ctx{color:#9AA8BC}
+.sr.route{color:#9DB0D6}
+.sr.flag{color:#fff}.sr.flag .vv{color:#FF8A7F}
+.sr.cur{background:#18304D;color:#fff}
+.center{padding:22px 28px;overflow:auto;display:flex;flex-direction:column;gap:18px;min-width:0}
+.counters{display:flex;gap:26px}
+.cn b{display:block;font-size:30px;font-weight:300;color:#fff}
+.cn span{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#7F8DA3}
+.now{background:var(--night2);border:1px solid var(--nrule);border-radius:6px;padding:20px 22px}
+.who{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--navyl);letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--navyl);box-shadow:0 0 0 0 rgba(157,176,214,.6)}
+.running .dot{animation:pulse 1.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(157,176,214,.6)}100%{box-shadow:0 0 0 10px rgba(157,176,214,0)}}
+.now h3{font-size:24px;font-weight:400;color:#fff;margin:10px 0 12px;line-height:1.3}
+.now .rule{display:inline-block;font-size:12px;border:1px solid #3D5578;color:#C9D4E6;padding:3px 9px;border-radius:12px;margin-right:8px}
+.verd{display:inline-block;font-family:'Roboto Mono',monospace;font-size:12px;font-weight:500;padding:3px 9px;border:1px solid #6A7A92;color:#DDE3EC}
+.verd.r{background:var(--risk);border-color:var(--risk);color:#fff}
+.verd.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.verd.ro{border-color:#C9A26B;color:#E6C590}
+.verd.rt{border-color:var(--navyl);color:var(--navyl)}
+.now p{font-size:17px;line-height:1.5;color:#DDE3EC;margin:14px 0 0}
+.dec{margin:12px 0 0;padding-left:20px;font-size:16px;line-height:1.6}
+.log{font-family:'Roboto Mono',monospace;font-size:12.5px;line-height:1.7;color:#7F8DA3;background:#030F1C;border:1px solid var(--nrule);border-radius:6px;padding:12px 14px;flex:1;min-height:160px;overflow:auto}
+.log .l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.log .b{color:var(--navyl)}.log .f{color:#FF8A7F}.log .o{color:#E6C590}.log .g{color:#7FD1A8}
+.board{border-left:1px solid var(--nrule);overflow:auto;padding:16px 18px}
+.board h4{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--navyl);margin:14px 0 8px;display:flex;justify-content:space-between}
+.board h4:first-child{margin-top:0}
+.fd{background:var(--night2);border:1px solid var(--nrule);border-left:3px solid var(--risk);border-radius:4px;padding:8px 10px;margin-bottom:6px;font-size:13px;line-height:1.4;color:#DDE3EC;animation:in .35s ease}
+.fd.ok{border-left-color:var(--ok)}.fd.aw{border-left-color:#C9A26B}.fd.es{border-left-color:#6A7A92}
+.fd small{display:block;color:#7F8DA3;font-size:11px;margin-top:3px}
+.pk{background:#0B2440;border:1px solid #3D5578;border-radius:4px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;animation:in .35s ease}
+.pk b{color:var(--navyl);font-size:11px;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:6px}
+.pk div{margin:3px 0;color:#DDE3EC}.pk i{font-style:normal;color:#7F8DA3}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.empty{font-size:12px;color:#4D5D75}
+/* grok */
+#v-grok{background:var(--paper);overflow:auto}
+.gwrap{max-width:1500px;margin:0 auto;padding:26px 30px}
+.ghead{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ghead h2{font-size:30px;font-weight:300;color:var(--ink);margin:0;flex:1}
+.gbtn{background:var(--ink);color:#fff;border:none;padding:12px 20px;border-radius:4px;font-size:15px;font-weight:500;text-decoration:none;display:inline-block}
+.gset{font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.gset input{font:inherit;font-size:12px;padding:5px 8px;border:1px solid var(--rule);border-radius:4px;width:280px}
+.gnote{font-size:13px;color:var(--muted);margin:8px 0 20px}
+.gsel{display:flex;gap:8px;margin-bottom:14px}
+.gsel button{background:#fff;border:1px solid var(--rule);color:var(--ink);padding:7px 14px;border-radius:16px;font-size:13px}
+.gsel button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.cmp{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px}
+.pane{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:16px 18px;min-height:420px}
+.pane h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin:0 0 10px;display:flex;justify-content:space-between;align-items:center}
+.pane textarea{width:100%;min-height:360px;border:1px dashed #C9C1B0;border-radius:4px;padding:12px;font-family:'Roboto Mono',monospace;font-size:12.5px;resize:vertical;background:#FBFAF7}
+.md{font-size:15px;line-height:1.55;color:var(--ink);overflow:auto}
+.md table{border-collapse:collapse;width:100%;font-size:13.5px;margin:10px 0}
+.md th,.md td{border:1px solid var(--rule);padding:6px 8px;text-align:left;vertical-align:top}
+.md th{background:#F4F1EA}
+.small{background:none;border:1px solid var(--rule);border-radius:4px;padding:4px 10px;font-size:12px;color:var(--muted);text-transform:none;letter-spacing:0}
+.exp .er{display:grid;grid-template-columns:118px 1fr;gap:10px;padding:9px 0;border-top:1px solid var(--rule);font-size:14px;color:var(--ink);line-height:1.4}
+.exp .er small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.pill{font-family:'Roboto Mono',monospace;font-size:11px;font-weight:500;border:1px solid var(--ink);padding:2px 6px;align-self:start;text-align:center}
+.pill.r{background:var(--risk);border-color:var(--risk);color:#fff}
+.reveal{margin-top:12px;background:none;border:1px solid var(--rule);padding:8px 14px;border-radius:4px;color:var(--muted);font-size:13px}
+/* ===== design v3: type scale, contrast, surfaces, polish ===== */
+:root{--muted:#4A4D53;--rule:#E6E1D7;--rule2:#EFEBE3;--mono:'Roboto Mono',ui-monospace,monospace;--lift:0 1px 2px rgba(21,23,26,.05),0 4px 14px rgba(21,23,26,.05);--hi:inset 0 1px 0 rgba(255,255,255,.7)}
+body{font-weight:400;line-height:1.55;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+/* top bar */
+.bar{height:48px;box-shadow:0 1px 0 #0E2238}
+.brand{font-weight:500;letter-spacing:.04em;font-size:14px}
+.brand span{font-weight:300;letter-spacing:.02em}
+.tab{font-weight:400;color:#A9B4C4;padding:7px 12px;transition:background .15s,color .15s;position:relative}
+.tab:hover{background:rgba(157,176,214,.08);color:#DDE3EC}
+.tab.on{background:rgba(157,176,214,.12);color:#fff;font-weight:500}
+.tab.on::after{content:'';position:absolute;left:12px;right:12px;bottom:-7px;height:2px;background:var(--navyl);border-radius:2px}
+.tab kbd{font-family:var(--mono);font-weight:500;font-size:10.5px;padding:1px 5px;line-height:1.4;border-color:#2C3F58;color:#7F8DA3}
+.hint{font-size:12px;color:#7F8DA3}
+.conn{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.02em;padding:3px 10px;border-color:#2A4060;color:#8A97AB}
+.conn.live{color:#BFE8D2;border-color:#2B6A4B;background:rgba(30,115,73,.12)}
+.pen{font-family:var(--mono);font-weight:500;font-size:11px;padding:4px 9px;border-color:#2A4060;color:#8A97AB;transition:background .15s,border-color .15s}
+.pen:hover{border-color:var(--navyl);color:#DDE3EC}
+.ex .exl{font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:.1em}
+.chip{font-size:12.5px;font-weight:400;transition:background .15s,border-color .15s}
+.chip.back{font-weight:500}
+.badge{font-family:var(--mono);font-weight:500;font-size:10.5px}
+/* views: short fade in */
+.view.on{animation:vin .16s ease-out}
+@keyframes vin{from{opacity:0}to{opacity:1}}
+#slideimg{transition:opacity .18s ease}
+#slideimg.fade{opacity:0}
+/* focus */
+button:focus-visible,input:focus-visible,textarea:focus-visible,.row:focus-visible,.fold:focus-visible{outline:2px solid var(--navyl);outline-offset:2px}
+#v-inbox button:focus-visible,#v-inbox input:focus-visible,#v-grok button:focus-visible,#v-grok input:focus-visible,#v-chat :focus-visible,.setcard :focus-visible{outline-color:var(--navy)}
+.search input:focus{outline:none;border-color:#AFC0DC;box-shadow:0 0 0 3px rgba(34,52,90,.10)}
+/* inbox */
+#v-inbox{background:#F3F0E9}
+.side{background:#EEEAE1;border-right:1px solid var(--rule)}
+.acct b{font-weight:500;font-size:14px}
+.acct{font-size:12px}
+.fold{font-size:14px;font-weight:400;padding:8px 12px;transition:background .15s}
+.fold:hover{background:#E4E0D6}
+.fold.on{font-weight:500}
+.fold span{font-family:var(--mono);font-weight:500;font-size:11px}
+.lab{font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:.12em}
+.list{border-right:1px solid var(--rule);background:#fff;box-shadow:1px 0 0 var(--rule2)}
+.search{padding:12px;border-bottom:1px solid var(--rule2)}
+.row{padding:10px 16px;gap:2px 12px;line-height:1.4;border-bottom:1px solid var(--rule2);transition:background .12s,box-shadow .12s}
+.row:hover{background:#FAF8F3;box-shadow:inset 0 0 0 1px var(--rule2)}
+.row.sel{background:var(--sel);box-shadow:inset 3px 0 0 var(--navy)}
+.row .fr{font-size:14px;font-weight:400;color:var(--ink)}
+.row .su{font-size:13px;line-height:1.45;color:var(--muted)}
+.row .su b{font-weight:500;color:var(--ink)}
+.row.unread .fr{font-weight:500}
+.row.unread .su b{font-weight:500}
+.row .dt{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:-.01em;color:#6A6D73}
+.newchip{font-family:var(--mono);font-weight:700;font-size:10px;letter-spacing:.08em;border-radius:2px}
+.read{padding:30px 40px;box-shadow:var(--lift)}
+.read h2{font-size:26px;font-weight:300;letter-spacing:-.005em;line-height:1.28;margin:0 0 18px}
+.hdr{font-size:13px;border-bottom:1px solid var(--rule2);padding-bottom:18px}
+.hdr b{font-weight:500}
+.mnum{font-family:var(--mono);font-weight:500;font-size:11px}
+.body{font-size:15px;line-height:1.6;padding:22px 0}
+.att{border-color:var(--rule);background:#FAF8F3;transition:border-color .15s,background .15s}
+.att .ic{font-family:var(--mono);font-weight:500}
+.deliver{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.04em;transition:border-color .15s,color .15s}
+/* team chat */
+.cside{background:#EEEAE1}
+.chead{font-size:17px;font-weight:500;padding:16px 26px;border-bottom:1px solid var(--rule2)}
+.chead small{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.02em}
+.cday{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.cm{padding:8px 0}
+.cm b{font-weight:500}
+.cm .tx{line-height:1.55}
+.av{font-weight:500;border-radius:5px}
+/* live findings */
+.lhead h2{font-size:28px;font-weight:300;letter-spacing:-.005em}
+.lhead .lc{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.1em}
+.lhead .lc b{font-family:Roboto,Arial,sans-serif;font-weight:300}
+.lcol h3{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.12em}
+.lf{border-left-width:3px;padding:14px 16px;margin-bottom:12px;line-height:1.55;border-color:#1D3049;box-shadow:inset 0 1px 0 rgba(255,255,255,.03);transition:background .15s,border-color .15s}
+.lf:hover{background:#112941}
+.lf .top{margin-bottom:8px}
+.lf .st{font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:.04em;padding:1px 6px}
+.lf .tm{font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:-.01em}
+.lf .ev{font-size:12.5px;line-height:1.5;color:#93A1B6;margin-top:8px}
+.lf.new{animation:glow3 1.4s ease-out}
+@keyframes glow3{0%{box-shadow:0 0 0 2px rgba(157,176,214,.7)}100%{box-shadow:0 0 0 0 rgba(157,176,214,0)}}
+.lempty{padding:64px 26px;color:#9AA8BC;font-size:16px;line-height:1.6;max-width:640px}
+.lempty::before{content:'STANDING BY';display:block;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.14em;color:var(--navyl);margin-bottom:10px}
+.setcard{box-shadow:var(--lift);border-color:var(--rule);padding:16px 18px}
+.setcard button{font-weight:500}
+/* replay */
+.fd{border-left-width:3px}
+.board h4,.cn span,.who{font-family:var(--mono);font-weight:500}
+.who{letter-spacing:.1em;font-size:11.5px}
+.now h3{font-weight:300;font-size:26px}
+/* grok tab */
+.ghead h2{font-weight:300;letter-spacing:-.005em}
+.pane{box-shadow:var(--lift);border-color:var(--rule)}
+.pane h3{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.12em}
+.gsel button{transition:background .15s,border-color .15s}
+.gsel button:hover{border-color:var(--navy)}
+.pill,.verd{font-family:var(--mono);font-weight:500}
+/* toast + modal */
+.toast{font-size:14px;line-height:1.45;padding:14px 18px;box-shadow:0 10px 30px rgba(5,25,45,.28)}
+.toast small{font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase}
+.cmodal>div{box-shadow:0 18px 50px rgba(5,25,45,.35)}
+.lf .ft{font-size:15px;font-weight:500;color:#EEF2F7;line-height:1.5}
+.lf .ev .k{font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--navyl);margin:0 6px 0 0}
+.lf .ev{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;align-items:baseline}
+.lf .ev .k{margin:0}
+.pane h3 .small,.pane h3 button{font-family:Roboto,Arial,sans-serif;letter-spacing:0;font-weight:400}
+
+/* prompts */
+#v-prompts{background:var(--paper);overflow:hidden}
+#v-prompts.on{display:block}
+.pwrap{display:grid;grid-template-columns:240px minmax(0,1fr);height:100%}
+.pnav{background:#EEEAE1;border-right:1px solid var(--rule);padding:18px 10px;overflow:auto}
+.pnav a{display:block;padding:8px 12px;border-radius:4px;font-size:14px;color:var(--ink);text-decoration:none;cursor:pointer}
+.pnav a:hover{background:#E4E0D6}
+.pnav .lab{padding:0 12px 10px}
+.plist{overflow:auto;padding:26px 34px 80px}
+.pg h2{font-size:26px;font-weight:300;color:var(--ink);margin:28px 0 14px;letter-spacing:-.005em}
+.pg:first-child h2{margin-top:0}
+.pc{background:#fff;border:1px solid var(--rule);border-radius:6px;box-shadow:var(--lift);padding:14px 16px;margin-bottom:12px}
+.pc .ph2{display:flex;align-items:center;gap:12px}
+.pc .pt{font-weight:500;color:var(--ink);font-size:15px;flex:1}
+.pc .pn{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.45}
+.pc pre{margin:10px 0 0;white-space:pre-wrap;font-family:var(--mono);font-size:13px;line-height:1.5;color:var(--ink);background:#FBFAF7;border:1px solid var(--rule2);border-radius:4px;padding:10px 12px}
+.pc.big pre{max-height:220px;overflow:auto}
+.pc.big.open pre{max-height:none}
+.cp{background:var(--ink);color:#fff;border:none;border-radius:4px;padding:7px 14px;font-size:13px;font-weight:500;min-width:86px}
+.cp.ok{background:var(--ok)}
+.xp{background:none;border:1px solid var(--rule);color:var(--muted);border-radius:4px;padding:6px 10px;font-size:12px}
+.fchips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.fchips .fl{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fchip{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--rule);background:#FBFAF7;border-radius:4px;padding:6px 10px;font-family:var(--mono);font-size:12.5px;color:var(--ink);text-decoration:none}
+.fchip span{color:var(--muted)}
+.fchip:hover{border-color:var(--ink)}
+.flist{display:grid;gap:8px}
+.frow{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.frow .pn{margin:0}
+.plead{color:var(--muted);font-size:14px;margin:-6px 0 12px}
+.pc.hold pre{display:none}.pc.hold.shown pre{display:block}
+.wsteps{margin:18px 0 16px;padding:0;list-style:none;counter-reset:w;display:grid;gap:10px}
+.wsteps li{counter-increment:w;background:#fff;border:1px solid var(--rule);border-radius:6px;padding:12px 16px 12px 56px;position:relative;font-size:15px;line-height:1.5;color:var(--ink)}
+.wsteps li::before{content:counter(w);position:absolute;left:16px;top:12px;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-family:var(--mono);font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center}
+.wsteps .st{display:block;font-weight:500;margin-bottom:2px}
+.wsteps .fchip{margin:4px 6px 0 0}
+#v-grok pre.gs{margin:10px 0 0;white-space:pre;overflow:auto;max-height:200px;font-family:var(--mono);font-size:12px;line-height:1.5;background:#FBFAF7;border:1px solid var(--rule2);border-radius:4px;padding:10px 12px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="brand">LX-200 <span>· build-along hub</span></div>
+  <button class="tab" data-v="prompts"><kbd>1</kbd>Prompts</button>
+  <button class="tab" data-v="inbox"><kbd>2</kbd>Inbox</button>
+  <button class="tab" data-v="chat"><kbd>3</kbd>Team chat</button>
+  <button class="tab" data-v="live"><kbd>4</kbd>Live findings <span class="badge" id="fbadge"></span></button>
+  
+  <button class="tab" data-v="grok"><kbd>5</kbd>Grok Bot</button>
+  <div class="ex" id="ex"></div>
+  <span class="sp"></span>
+  <span class="conn" id="conn" title="Data source">Built-in data</span>
+  <span class="hint" id="hint"></span>
+  <button class="pen" id="pen" title="P toggles the pen, C clears">Pen</button>
+</div>
+
+<section class="view" id="v-slides"><img id="slideimg" alt=""><div class="hot l" id="sl-prev"></div><div class="hot r" id="sl-next"></div></section>
+<section class="view" id="v-prompts"><div class="pwrap"><div class="pnav" id="pnav"></div><div class="plist" id="plist"></div></div></section>
+
+<section class="view" id="v-inbox">
+  <div class="side">
+    <div class="acct"><b>Ryan Murphy</b>ryan.murphy@cypressbend.example</div>
+    <div class="fold on" data-f="all">Inbox <span id="cnt-all"></span></div>
+    <div class="fold" data-f="lx">LX-200 <span id="cnt-lx"></span></div>
+    <div class="fold" data-f="att">With attachments <span id="cnt-att"></span></div>
+    <div class="lab">Practice pack</div>
+    <div class="acct">Cypress Bend Molding is fictional. Every person and company here is made up.</div>
+    <button class="deliver" id="deliver">Deliver Message 67</button>
+  </div>
+  <div class="list"><div class="search"><input id="q" placeholder="Search mail" autocomplete="off"></div><div class="rows" id="rows"></div></div>
+  <div class="read" id="read"></div>
+</section>
+
+<section class="view" id="v-chat">
+  <div class="cside"><div class="wk">Cypress Bend · team chat</div><div class="ch"># lx200-program</div></div>
+  <div class="cmain"><div class="chead"># lx200-program <small id="chatcount"></small></div><div class="cmsgs" id="cmsgs"></div></div>
+</section>
+
+<section class="view" id="v-live">
+  <div class="lhead"><h2>Live findings</h2><span class="lc"><b id="lc-total">0</b>findings</span></div>
+  <div id="lbody"></div>
+</section>
+
+<section class="view" id="v-hood">
+  <div class="hhead">
+    <button class="ph" data-p="scout">1 Scout reads</button>
+    <button class="ph" data-p="ledger">2 Ledger</button>
+    <button class="ph" data-p="handoff">3 Handoffs</button>
+    <button class="ph" data-p="foreman">4 Foreman</button>
+    <button class="ph" data-p="m67" id="ph-m67">5 Message 67</button>
+    <span style="flex:1"></span>
+    <button class="ctl play" id="play">Play</button>
+    <button class="ctl" id="step">Step →</button>
+    <button class="ctl" id="speed">Speed 1×</button>
+    <button class="ctl" id="hreset">Reset</button>
+    <div class="disc">Replay: how the bots reason through the inbox, step by step. An illustration built from the practice pack's answer key, not live Grok Bot output. The live run happens in Grok Bot.</div>
+  </div>
+  <div class="hood">
+    <div class="stream" id="stream"></div>
+    <div class="center">
+      <div class="counters"><div class="cn"><b id="c-read">0</b><span>Read</span></div><div class="cn"><b id="c-skip">0</b><span>Noise skipped</span></div><div class="cn"><b id="c-ruled">0</b><span>Lookalikes ruled out</span></div><div class="cn"><b id="c-route">0</b><span>Handed off</span></div><div class="cn"><b id="c-flag">0</b><span>Flagged</span></div></div>
+      <div class="now" id="now"></div>
+      <div class="log" id="log"></div>
+    </div>
+    <div class="board">
+      <h4>Scout <span id="n-scout"></span></h4><div id="b-scout"><div class="empty">Nothing yet.</div></div>
+      <h4>Ledger <span id="n-ledger"></span></h4><div id="b-ledger"><div class="empty">Nothing yet.</div></div>
+      <h4>Handoffs to Foreman</h4><div id="b-pk"><div class="empty">Nothing yet.</div></div>
+      <h4>Foreman <span id="n-foreman"></span></h4><div id="b-foreman"><div class="empty">Nothing yet.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="v-grok">
+  <div class="gwrap">
+    <div class="ghead">
+      <h2>Your own live world</h2>
+      <a class="gbtn" id="glink" href="#" target="_blank" rel="noopener">Open Grok Bot ↗</a>
+    </div>
+    <div class="gset" style="margin-top:10px">Grok Bot link: <input id="gurl" placeholder="Paste your Grok Bot address once; it's remembered in this browser"></div>
+    <p class="gnote">Optional, about 10 minutes. Without it, this hub runs on its built-in copy of the inbox and team chat, and you can still build all three Bots from the Prompts tab. With it, your Bots read and write a Google Sheet you own, and this page shows their findings as they land.</p>
+    <ol class="wsteps"><li><b class="st">Get the two files</b><div>Download <a class='fchip' href='files/LX-200_World.xlsx' download>LX-200_World.xlsx<span>↓</span></a> and <a class='fchip' href='files/LX-200_World_Script.gs' download>LX-200_World_Script.gs<span>↓</span></a></div></li><li><b class="st">Make the sheet</b><div>In Google Drive, make a folder named <b>LX-200 World</b>. Upload LX-200_World.xlsx into it and open it. Choose <b>File &gt; Save as Google Sheets</b> and name the copy <b>LX-200_World</b>. Then delete the .xlsx so your Bots find only one sheet.</div></li><li><b class="st">Add the script</b><div>In the sheet, open <b>Extensions &gt; Apps Script</b>. Delete the starter code, paste the script (Copy button below) and click <b>Save</b>.</div></li><li><b class="st">Set your key</b><div>Reload the sheet. An <b>LX-200</b> menu appears. Choose <b>LX-200 &gt; Set hub key</b> and pick a short private word. The first time, Google asks you to authorize the script: pick your account. If you see <b>Google hasn't verified this app</b>, choose <b>Advanced</b>, then <b>Go to</b> the project. It's your own script, running in your own account.</div></li><li><b class="st">Deploy the feed</b><div>Back in Apps Script: <b>Deploy &gt; New deployment</b>. Click the gear and choose <b>Web app</b>. Set <b>Execute as: Me</b> and <b>Who has access: Anyone</b>. Click <b>Deploy</b>, authorize again if asked, and copy the <b>Web app URL</b>. It ends in <b>/exec</b>.</div></li><li><b class="st">Connect this hub</b><div>Paste the URL and your key below, then click <b>Save and connect</b>. The pill at the top right turns to <b>Connected</b>. Click <b>Reset world</b> once to start clean. Inbox and Team chat now come from your sheet, and Live findings shows what your Bots write.</div></li><li><b class="st">Connect Grok Bot</b><div>In Grok Bot, open <b>Connect apps</b> and connect Google Sheets and Google Drive with the same Google account. For the Drive way, upload the three PDFs and the three instruction files (Prompts tab &gt; Files) into the same LX-200 World folder, then use the lines under <b>Drive way</b> on the Prompts tab.</div></li><li><b class="st">Deliver Message 67</b><div>When you're ready for the new email, use <b>Deliver Message 67</b> in the Inbox tab. It lands in your sheet, and your Bots can react to it.</div></li></ol>
+    <div class="pc"><div class="ph2"><div class="pt">LX-200_World_Script.gs</div><button class="cp" id="gscp">Copy script</button></div><pre class="gs">/**
+ * LX-200 World: reset, deliver Message 67, and a read-only feed for the demo hub.
+ * Paste into Extensions &gt; Apps Script in the LX-200 World Google Sheet.
+ * Fictional practice data only.
+ */
+const LIVE_TABS = [&#x27;Inbox&#x27;,&#x27;Team chat&#x27;,&#x27;Gates&#x27;,&#x27;Schedule&#x27;,&#x27;Budget &amp; Hours&#x27;,&#x27;Payments&#x27;,&#x27;Documents&#x27;,&#x27;RAID&#x27;,&#x27;Contacts&#x27;];
+const MESSAGE_67 = [67, &quot;Nov 23, 2026&quot;, &quot;Jason Wu &lt;jason.wu@hengtaimold.example&gt;&quot;, &quot;Ryan Murphy &lt;ryan.murphy@cypressbend.example&gt;&quot;, &quot;&quot;, &quot;URGENT: LX-200 Rev C impact on tool and T1 date&quot;, &quot;&quot;, &quot;CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nDear Ryan,\n\nToday we received drawing Rev C from your sales team. The rib change from 1.5 mm to 2.0 mm affects the slider design. We need 8 more working days for tool design, and the design must be approved again.\n\nNew T1 date: Feb 5, 2027.\n\nPlease also note our factory closes for Chinese New Year from Jan 30 and reopens Feb 22. If T1 cannot be completed before Jan 30, it will be after Feb 22.\n\nWe are still waiting for the deposit of USD 28,000 to order steel.\n\nPlease advise how you want to proceed.\n\nBest regards,\nJason Wu\nProject Manager, Hengtai Precision Mold&quot;];
+
+function onOpen() {
+  SpreadsheetApp.getUi().createMenu(&#x27;LX-200&#x27;)
+    .addItem(&#x27;Reset world&#x27;, &#x27;resetWorld&#x27;)
+    .addItem(&#x27;Deliver Message 67&#x27;, &#x27;deliver67&#x27;)
+    .addSeparator()
+    .addItem(&#x27;Set hub key&#x27;, &#x27;setHubKey&#x27;)
+    .addToUi();
+}
+
+function resetWorld() {
+  const ss = SpreadsheetApp.getActive();
+  LIVE_TABS.forEach(name =&gt; {
+    const live = ss.getSheetByName(name), base = ss.getSheetByName(&#x27;_base_&#x27; + name);
+    if (!live || !base) throw new Error(&#x27;Missing tab: &#x27; + name);
+    live.clearContents();
+    base.getDataRange().copyTo(live.getRange(1, 1));
+  });
+  const f = ss.getSheetByName(&#x27;Findings&#x27;);
+  if (f.getLastRow() &gt; 1) f.getRange(2, 1, f.getLastRow() - 1, Math.max(f.getLastColumn(), 7)).clearContent();
+  setControl_(&#x27;message67_delivered&#x27;, &#x27;FALSE&#x27;);
+  setControl_(&#x27;last_reset&#x27;, new Date().toISOString());
+  setControl_(&#x27;run_label&#x27;, &#x27;Opening&#x27;);
+  return &#x27;reset&#x27;;
+}
+
+function deliver67() {
+  if (getControl_(&#x27;message67_delivered&#x27;) === &#x27;TRUE&#x27;) return &#x27;already delivered&#x27;;
+  const inbox = SpreadsheetApp.getActive().getSheetByName(&#x27;Inbox&#x27;);
+  inbox.appendRow(MESSAGE_67);
+  setControl_(&#x27;message67_delivered&#x27;, &#x27;TRUE&#x27;);
+  setControl_(&#x27;run_label&#x27;, &#x27;Message 67&#x27;);
+  return &#x27;delivered&#x27;;
+}
+
+function setHubKey() {
+  const ui = SpreadsheetApp.getUi();
+  const r = ui.prompt(&#x27;Hub key&#x27;, &#x27;Pick a short private word. The hub asks for it before Reset or Deliver.&#x27;, ui.ButtonSet.OK_CANCEL);
+  if (r.getSelectedButton() === ui.Button.OK) {
+    PropertiesService.getScriptProperties().setProperty(&#x27;HUB_KEY&#x27;, r.getResponseText().trim());
+    ui.alert(&#x27;Saved.&#x27;);
+  }
+}
+
+/** Web app: GET returns the world as JSON. ?action=reset|deliver67&amp;key=... changes it. */
+function doGet(e) {
+  const p = (e &amp;&amp; e.parameter) || {};
+  let result = &#x27;ok&#x27;;
+  if (p.action) {
+    const key = PropertiesService.getScriptProperties().getProperty(&#x27;HUB_KEY&#x27;) || &#x27;&#x27;;
+    if (!key || p.key !== key) return json_({ error: &#x27;bad key&#x27; });
+    if (p.action === &#x27;reset&#x27;) result = resetWorld();
+    else if (p.action === &#x27;deliver67&#x27;) result = deliver67();
+    else return json_({ error: &#x27;unknown action&#x27; });
+  }
+  const ss = SpreadsheetApp.getActive();
+  return json_({
+    result: result,
+    updated: new Date().toISOString(),
+    control: readControl_(),
+    inbox: rows_(ss.getSheetByName(&#x27;Inbox&#x27;)),
+    chat: rows_(ss.getSheetByName(&#x27;Team chat&#x27;)),
+    findings: rows_(ss.getSheetByName(&#x27;Findings&#x27;))
+  });
+}
+
+function rows_(sh) {
+  const v = sh.getDataRange().getDisplayValues();
+  const head = v.shift();
+  return v.filter(r =&gt; r.some(x =&gt; String(x).trim() !== &#x27;&#x27;)).map(r =&gt; {
+    const o = {}; head.forEach((h, i) =&gt; o[h] = r[i]); return o;
+  });
+}
+function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
+function readControl_() {
+  const v = SpreadsheetApp.getActive().getSheetByName(&#x27;Control&#x27;).getDataRange().getDisplayValues();
+  const o = {}; v.slice(1).forEach(r =&gt; o[r[0]] = r[1]); return o;
+}
+function getControl_(k) { return readControl_()[k]; }
+function setControl_(k, val) {
+  const sh = SpreadsheetApp.getActive().getSheetByName(&#x27;Control&#x27;);
+  const v = sh.getDataRange().getValues();
+  for (let i = 1; i &lt; v.length; i++) if (v[i][0] === k) { sh.getRange(i + 1, 2).setValue(val); return; }
+  sh.appendRow([k, val]);
+}
+</pre></div>
+    <div class="setcard"><b>Connect your live world</b><br>Feed address (your Web app URL):<input id="wurl" placeholder="https://script.google.com/macros/s/.../exec">Hub key:<input id="wkey" type="password" placeholder="The private word you set in the sheet">
+<div class="row2"><button id="wsave">Save and connect</button><button id="wreset" class="warn">Reset world</button><span id="wstat" style="align-self:center"></span></div></div>
+    <p class="gnote"><b>Good to know.</b> "Anyone" means anyone who has your URL can read this practice sheet. Changing it needs your key. Keep real data out of it. To shut it off: Apps Script &gt; Deploy &gt; Manage deployments &gt; Archive. To remove Grok Bot's access to your Google account later: myaccount.google.com/permissions.</p>
+    <div style="display:none"><div id="gsel"></div><button id="gclear"></button><div id="gout"></div><div id="gexp"></div></div>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+<div class="cmodal" id="cmodal" role="dialog" aria-modal="true"><div><p id="rmsg"></p><button id="cyes">Reset world</button><button id="cno">Cancel</button></div></div>
+<div class="lb" id="lb"><button class="x" id="lbx">Close · Esc</button><div class="imgs" id="lbimgs"></div></div>
+<canvas id="ink"></canvas>
+
+<script>
+const D={"msgs": [{"n": 1, "date": "Sep 8, 2026", "from": "Dana Whitfield <dana.whitfield@ardentoutdoor.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "RFQ: LX-200 lantern housing", "att": [{"name": "RFQ__LX_200_lantern_housing.pdf", "img": null}], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nHi Ryan,\n\nAttached is our RFQ for the LX-200 lantern housing. Material is PA6 30% glass-filled nylon, black. We're estimating 60,000 pieces a year starting with a spring 2027 launch, so we need production parts by mid-April.\n\nWe'd like pricing for a 2-cavity tool and a piece price at 5,000-piece releases. Quotes are due Sep 22. Marco Reyes is our design engineer if you have questions on the drawing (Rev A).\n\nThanks,\nDana Whitfield\nSenior Buyer, Ardent Outdoor Gear"}, {"n": 2, "date": "Sep 8, 2026", "from": "Nadine Comeaux <nadine.comeaux@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "FW: Molding Weekly: automation spending climbs, resin prices hold", "att": [], "body": "See below. Anything needed from us?\n\nNadine Comeaux\n\n---------- Forwarded message ----------\nFrom: Molding Weekly\n\nThis week in molding:\n- Automation budgets up for the third straight quarter\n- Commodity resin prices flat; engineering resins mixed\n- Five questions to ask before you buy a used press\n\nRead more on our site. You are receiving this because you subscribed."}, {"n": 3, "date": "Sep 9, 2026", "from": "Cypress Bend IT <it@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Your password expires in 7 days", "att": [], "body": "Your network password expires in 7 days. Change it from any company computer with Ctrl+Alt+Del > Change password.\n\nCypress Bend IT"}, {"n": 4, "date": "Sep 10, 2026", "from": "Ryan Murphy <ryan.murphy@cypressbend.example>", "to": "Lily Chen <lily.chen@hengtaimold.example>", "cc": "", "subject": "RFQ: LX-200 2-cavity hot-runner tool", "att": [{"name": "RFQ__LX_200_2_cavity_hot_runner_tool.pdf", "img": null}], "body": "Hi Lily,\n\nPlease quote a 2-cavity hot-runner tool for the attached LX-200 housing, PA6 GF30, Rev A. P20 steel is acceptable. We need your price, T1 lead time from design approval, and shipping terms. Quotes by Sep 16, please.\n\nRyan Murphy\nProgram Manager, Cypress Bend Molding"}, {"n": 5, "date": "Sep 11, 2026", "from": "Chris Patel <chris.patel@baylinemarine.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "BX-40 caps: Q4 release schedule", "att": [{"name": "BX_40_caps__Q4_release_schedule.pdf", "img": null}], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nRyan,\n\nAttached is our Q4 release schedule for the BX-40 caps. No changes from the forecast we sent in August. Let me know if the new tool is still on track for T1 in October.\n\nChris Patel\nBuyer, Bayline Marine"}, {"n": 6, "date": "Sep 11, 2026", "from": "Cypress Bend HR <hr@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Open enrollment starts Oct 1", "att": [], "body": "Benefits open enrollment runs Oct 1 to Oct 31. Watch for the email from our benefits portal with your login. Lunch sessions with our broker are Oct 7 and Oct 14 in the break room.\n\nCypress Bend HR"}, {"n": 7, "date": "Sep 15, 2026", "from": "Lily Chen <lily.chen@hengtaimold.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Quotation: LX-200 2-cavity hot-runner mold", "att": [{"name": "Hengtai_Quotation_LX-200.pdf", "img": "docs/Hengtai_Quotation_LX-200.webp"}], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nDear Ryan,\n\nThank you for the RFQ. Our quotation for the LX-200 mold:\n\n- 2 cavities, hot runner (4 drops), P20 steel, one slider per cavity\n- Price: USD 56,000, FOB Shenzhen\n- Lead time: T1 samples in 10 weeks\n\nFull terms and notes are in the attached quotation.\n\nBest regards,\nLily Chen\nSales Manager, Hengtai Precision Mold"}, {"n": 8, "date": "Sep 15, 2026", "from": "Sam Okafor <sam.okafor@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "FW: Fall promo: 10% off replacement heaters and thermocouples", "att": [], "body": "FYI.\n\nSam Okafor\n\n---------- Forwarded message ----------\nFrom: RedRiver Hot Runners\n\nStock up before the end of the year. 10% off all replacement heaters, thermocouples and nozzle tips through Nov 30. Free shipping on orders over $500.\n\nRedRiver Hot Runners"}, {"n": 9, "date": "Sep 16, 2026", "from": "Sam Okafor <sam.okafor@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "LX-200 feasibility review", "att": [], "body": "Ryan,\n\nFeasibility looks good. A few notes for the quote:\n- Nominal wall 2.5 mm is fine for GF30.\n- The center rib at 1.5 mm is thin for glass-filled nylon. Expect fill and strength questions. Worth raising in DFM.\n- Slider needed for the side latch. Hengtai's one-slider-per-cavity design makes sense.\n- Press 9 (350 ton) is the right press. It's the only one with enough hot-runner zones.\n\nSam"}, {"n": 10, "date": "Sep 18, 2026", "from": "Denise Marceaux <denise.marceaux@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Quote review Friday", "att": [], "body": "Ryan, let's review the Ardent quote Friday at 10. Reminder that tooling margin floor is 30% and I want to see the landed cost on any offshore tool, including freight and duty, not just the builder's price.\n\nDenise"}, {"n": 11, "date": "Sep 21, 2026", "from": "Nadine Comeaux <nadine.comeaux@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "FW: Molding Weekly: what moldmakers wish PMs knew", "att": [], "body": "See below. Anything needed from us?\n\nNadine Comeaux\n\n---------- Forwarded message ----------\nFrom: Molding Weekly\n\nThis week: ten things moldmakers wish program managers knew, plus a guide to reading a T1 report."}, {"n": 12, "date": "Sep 22, 2026", "from": "Ryan Murphy <ryan.murphy@cypressbend.example>", "to": "Dana Whitfield <dana.whitfield@ardentoutdoor.example>", "cc": "", "subject": "Quote: LX-200 tooling and piece price", "att": [{"name": "Quote__LX_200_tooling_and_piece_price.pdf", "img": null}], "body": "Hi Dana,\n\nOur quote for the LX-200 housing is attached. Summary:\n\n- 2-cavity hot-runner tool: $80,000, 50% due with PO, 50% at first-article approval\n- Piece price: $2.85 at 5,000-piece releases\n- Lead time: T1 samples about 10 weeks after tool design approval; production parts in early April if the PO lands by Oct 6\n\nThe tool will be built offshore. That keeps the tooling price down but adds about five weeks of ocean freight before we can qualify. Happy to walk through it.\n\nRyan Murphy\nProgram Manager, Cypress Bend Molding"}, {"n": 13, "date": "Sep 24, 2026", "from": "Angela Torres <angela.torres@kestrelmedical.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Kestrel tray: Rev C approved - please implement", "att": [{"name": "Kestrel_tray__Rev_C_approved___please_implement.pdf", "img": null}], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nRyan,\n\nFormal notice: drawing Rev C for the Kestrel tray is approved through our change board (ECN 2291, attached with signatures). Please implement on the next tool modification and plan validation runs. Your Quality team has the updated inspection requirements.\n\nAngela Torres\nSupplier Quality Engineer, Kestrel Medical"}, {"n": 14, "date": "Sep 25, 2026", "from": "Travis Hebert <travis.hebert@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Production schedule, week 39", "att": [{"name": "Production_schedule__week_39.pdf", "img": null}], "body": "Attached is the production schedule for week 39. Press 4 down Tuesday for preventive maintenance. Bayline BX-30 run moved to Press 6.\n\nTravis\nProduction Office"}, {"n": 15, "date": "Oct 1, 2026", "from": "Cypress Bend HR <hr@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Open enrollment is now open", "att": [], "body": "Open enrollment is open through Oct 31. If you make no changes, your current elections carry over, except the FSA, which you must re-elect."}, {"n": 16, "date": "Oct 2, 2026", "from": "Cypress Bend HR <hr@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Food truck Friday", "att": [], "body": "Boudin and cracklins truck in the front lot Friday from 11 to 1."}, {"n": 17, "date": "Oct 5, 2026", "from": "Travis Hebert <travis.hebert@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Production schedule, week 40", "att": [{"name": "Production_schedule__week_40.pdf", "img": null}], "body": "Week 40 schedule attached. Press 9 running Kestrel trays Monday through Thursday.\n\nTravis"}, {"n": 18, "date": "Oct 6, 2026", "from": "Dana Whitfield <dana.whitfield@ardentoutdoor.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "PO for LX-200 tooling", "att": [{"name": "PO_for_LX_200_tooling.pdf", "img": null}], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nRyan,\n\nPO 4500-1187 for the LX-200 tooling is attached, $80,000. Our AP team is sending the 50% deposit this week.\n\nOne thing to know: our spring launch date is fixed. Retail resets are booked, so we can't move it. Please flag anything that threatens mid-April as early as you can.\n\nDana"}, {"n": 19, "date": "Oct 8, 2026", "from": "Lena Guidry <lena.guidry@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Ardent deposit received", "att": [], "body": "Ryan, FYI, Ardent's tooling deposit of $40,000 cleared this morning against PO 4500-1187.\n\nLena Guidry\nAccounting, Cypress Bend Molding"}, {"n": 20, "date": "Oct 13, 2026", "from": "Ryan Murphy <ryan.murphy@cypressbend.example>", "to": "Marco Reyes <marco.reyes@ardentoutdoor.example>", "cc": "", "subject": "LX-200 DFM report for review", "att": [{"name": "LX_200_DFM_report_for_review.pdf", "img": null}], "body": "Marco,\n\nDFM report and mold-flow summary are attached. Main points: 1.5-degree draft on outer walls, gate on the bottom face, and the 1.5 mm center rib is on the thin side for GF30. It fills in the simulation but it's marginal. Can you review by Oct 20?\n\nRyan"}, {"n": 21, "date": "Oct 14, 2026", "from": "Mike Theriot <mike.theriot@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "FW: Small tweak on the LX-200 rib", "att": [{"name": "LX-200_Drawing_RevC.pdf", "img": "docs/LX-200_Drawing_RevC.webp"}], "body": "FYI only, no action needed. Marco says it's minor. I saved his file to the design folder.\n\nMike Theriot\nSales, Cypress Bend Molding\n\n---------- Forwarded message ----------\nFrom: Marco Reyes, Ardent Outdoor Gear\nSubject: Small tweak on the LX-200 rib\n\nHey Mike, quick one. Drop testing showed the center rib flexing, so we're taking it from 1.5 mm to 2.0 mm. That's drawing Rev C. Shouldn't affect anything on your side. I'll get the formal sign-off on Rev B done next week as planned so we don't hold things up.\n\nMarco"}, {"n": 22, "date": "Oct 14, 2026", "from": "Cypress Bend IT <it@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Phishing test results", "att": [], "body": "Thanks to the 81% of you who reported last week's test email. If you clicked the link, you'll get a short training assignment this week."}, {"n": 23, "date": "Oct 15, 2026", "from": "Lily Chen <lily.chen@hengtaimold.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "BX-40 mold: final payment invoice", "att": [{"name": "BX_40_mold__final_payment_invoice.pdf", "img": null}], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nDear Ryan,\n\nAttached is our invoice for the BX-40 mold final payment, USD 16,800, against PO CB-T-0398. Please arrange payment within 15 days of T1 approval.\n\nBest regards,\nLily Chen"}, {"n": 24, "date": "Oct 16, 2026", "from": "Cypress Bend IT <it@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "New printer on the second floor", "att": [], "body": "The second-floor printer has been replaced. It's named CB-PRN-02. Your computer should pick it up automatically after a restart."}, {"n": 25, "date": "Oct 20, 2026", "from": "Marco Reyes <marco.reyes@ardentoutdoor.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Signed drawing Rev B, LX-200", "att": [{"name": "LX-200_Drawing_RevB_SIGNED.pdf", "img": "docs/LX-200_Drawing_RevB_SIGNED.webp"}], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nRyan,\n\nSigned Rev B is attached. The DFM comments look good: we accept the 1.5-degree draft on the outer walls and the gate location on the bottom face. You're clear to release the tool.\n\nMarco Reyes\nDesign Engineer, Ardent Outdoor Gear"}, {"n": 26, "date": "Oct 20, 2026", "from": "Joelle Arceneaux <joelle.arceneaux@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "MRB moved to Thursday", "att": [], "body": "Material Review Board moves to Thursday 2:00 this week. Three items on the list, none of them yours.\n\nJoelle"}, {"n": 27, "date": "Oct 21, 2026", "from": "Sam Okafor <sam.okafor@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "DFM closed for LX-200", "att": [], "body": "DFM is closed. Marco accepted the 1.5 mm rib as-is in Rev B, so we're releasing the tool design to Hengtai on Rev B.\n\nSam"}, {"n": 28, "date": "Oct 23, 2026", "from": "Lena Guidry <lena.guidry@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Expense reports due Monday", "att": [{"name": "Expense_reports_due_Monday.pdf", "img": null}], "body": "Reminder: October expense reports are due Monday. Receipts over $25 must be attached."}, {"n": 29, "date": "Oct 24, 2026", "from": "Jason Wu <jason.wu@hengtaimold.example>", "to": "Sam Okafor <sam.okafor@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "RE: RE: LX-200 DFM questions: gate and cooling", "att": [], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nNoted with thanks. Cooling layout will follow the Rev B rib geometry.\n\nJason"}, {"n": 30, "date": "Oct 26, 2026", "from": "Cypress Bend HR <hr@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Halloween costume contest Friday", "att": [], "body": "Costume contest at lunch Friday. Prizes for best individual and best department. Production won last year, and they will remind you."}, {"n": 31, "date": "Oct 27, 2026", "from": "Ryan Murphy <ryan.murphy@cypressbend.example>", "to": "Jason Wu <jason.wu@hengtaimold.example>", "cc": "", "subject": "Tool PO and spec, LX-200", "att": [{"name": "PO_CB-T-0412_and_Tool_Spec.pdf", "img": null}], "body": "Hi Jason,\n\nAttached are PO CB-T-0412 for $56,000 and the tool spec for the LX-200 housing: 2 cavities, hot runner, P20 steel, built to drawing Rev B. Terms are 50% deposit, 40% at T1 approval, 10% at tool acceptance in our plant.\n\nPlease confirm receipt and send your build schedule with the T1 date.\n\nRyan Murphy\nProgram Manager, Cypress Bend Molding"}, {"n": 32, "date": "Oct 27, 2026", "from": "Ryan Murphy <ryan.murphy@cypressbend.example>", "to": "Lena Guidry <lena.guidry@cypressbend.example>", "cc": "Nadine Comeaux <nadine.comeaux@cypressbend.example>", "subject": "Please wire Hengtai deposit, LX-200", "att": [{"name": "Please_wire_Hengtai_deposit__LX_200.pdf", "img": null}], "body": "Lena, please wire the 50% tooling deposit to Hengtai, $28,000 against PO CB-T-0412. Their bank form is attached. Nadine, cc for the PO file.\n\nRyan"}, {"n": 33, "date": "Oct 28, 2026", "from": "Lena Guidry <lena.guidry@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "RE: Please wire Hengtai deposit, LX-200", "att": [], "body": "Ryan, the bank details on this form don't match what we have on file for Hengtai. Policy is a verification call to a known contact before we wire to changed details. Can you or Nadine set that up? I'll hold until then.\n\nLena"}, {"n": 34, "date": "Oct 30, 2026", "from": "Jason Wu <jason.wu@hengtaimold.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "RE: Tool PO and spec, LX-200", "att": [{"name": "Tool_PO_and_spec__LX_200.pdf", "img": null}], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nDear Ryan,\n\nThank you, PO CB-T-0412 is received. Our schedule:\n\n- Tool design for your review: Nov 10\n- Steel cut: Nov 17\n- T1 samples: Jan 26\n\nPlease note we will order steel after the deposit of USD 28,000 is received. Bank details are attached again for your accounting team.\n\nBest regards,\nJason Wu\nProject Manager, Hengtai Precision Mold"}, {"n": 35, "date": "Oct 30, 2026", "from": "Lena Guidry <lena.guidry@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Wire sent to Hengtai", "att": [{"name": "Wire_sent_to_Hengtai.pdf", "img": null}], "body": "Ryan, wire sent to Hengtai today, USD 16,800, reference PO CB-T-0398. Confirmation attached.\n\nLena"}, {"n": 36, "date": "Oct 30, 2026", "from": "Ryan Murphy <ryan.murphy@cypressbend.example>", "to": "Jason Wu <jason.wu@hengtaimold.example>", "cc": "", "subject": "RE: Tool PO and spec, LX-200", "att": [], "body": "Thanks Jason, schedule received.\n\nRyan"}, {"n": 37, "date": "Oct 31, 2026", "from": "Cypress Bend HR <hr@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Costume contest winners", "att": [], "body": "Congratulations to Shipping & Receiving for best department costume. Photos are on the break room board."}, {"n": 38, "date": "Nov 2, 2026", "from": "Jason Wu <jason.wu@hengtaimold.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Steel received - photos", "att": [{"name": "Steel_received___photos.pdf", "img": null}], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nDear Mr. Tran,\n\nPhotos attached of the steel blocks received today for project HT-2290. Machining will begin Monday.\n\nBest regards,\nJason Wu"}, {"n": 39, "date": "Nov 2, 2026", "from": "Jason Wu <jason.wu@hengtaimold.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Please ignore: Steel received - photos", "att": [], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nDear Ryan,\n\nSorry, the previous email was sent to you by mistake. Please delete it.\n\nJason Wu"}, {"n": 40, "date": "Nov 3, 2026", "from": "Paul Landry <paul.landry@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "FW: Molding Weekly: drying engineering resins right", "att": [], "body": "Not sure whether this matters, but sending it in case.\n\nPaul Landry\n\n---------- Forwarded message ----------\nFrom: Molding Weekly\n\nThis week: why wet nylon causes splay and brittleness, a dew-point dryer buyer's guide, and a case study on hot-runner balancing."}, {"n": 41, "date": "Nov 4, 2026", "from": "Cypress Bend IT <it@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "ERP maintenance Saturday 6 a.m. to noon", "att": [], "body": "The ERP will be unavailable Saturday from 6 a.m. to noon for an upgrade. Print any pick lists you need before Friday 5 p.m."}, {"n": 42, "date": "Nov 5, 2026", "from": "Joelle Arceneaux <joelle.arceneaux@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "ISO surveillance audit Dec 8-9", "att": [], "body": "Our ISO surveillance audit is Dec 8-9. Program managers: please make sure your program files show current drawing revisions and approvals. The auditor will sample two active programs.\n\nJoelle"}, {"n": 43, "date": "Nov 6, 2026", "from": "Lena Guidry <lena.guidry@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "AP run this week", "att": [], "body": "AP run went out today. Paid this week:\n- Gulfline Polymers (Sep and Oct resin invoices)\n- Bayou Express LTL\n- Atlas Tool Steel\n- RedRiver Hot Runners\n- Lakeshore Mold Works (Bayline fixture repair)\nNext run Nov 20.\n\nLena"}, {"n": 44, "date": "Nov 6, 2026", "from": "Cypress Bend HR <hr@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Save the date: holiday party Dec 12", "att": [], "body": "Holiday party is Saturday Dec 12 at the Knights of Columbus hall. Families welcome. RSVP by Dec 1."}, {"n": 45, "date": "Nov 6, 2026", "from": "Paul Landry <paul.landry@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Who moved the regrind bins?", "att": [], "body": "All, the regrind bins by Press 6 were moved again and nobody can find the black PP bin. Please put them back where they're labeled.\n\nPaul"}, {"n": 46, "date": "Nov 6, 2026", "from": "Travis Hebert <travis.hebert@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "RE: Who moved the regrind bins?", "att": [], "body": "Second shift moved them for the floor scrubber. They're by the dock door."}, {"n": 47, "date": "Nov 6, 2026", "from": "Andre Simon <andre.simon@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "RE: Who moved the regrind bins?", "att": [], "body": "Can we get floor markings for those?"}, {"n": 48, "date": "Nov 6, 2026", "from": "Paul Landry <paul.landry@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "RE: Who moved the regrind bins?", "att": [], "body": "Found them. Thanks Travis."}, {"n": 49, "date": "Nov 6, 2026", "from": "Cypress Bend Safety Committee <safety@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "RE: Who moved the regrind bins?", "att": [], "body": "Floor markings added to next week's list. Please don't reply-all."}, {"n": 50, "date": "Nov 9, 2026", "from": "Jason Wu <jason.wu@hengtaimold.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Weekly update, LX-200 tool, week 45", "att": [{"name": "Weekly_update__LX_200_tool__week_45.pdf", "img": null}], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nDear Ryan,\n\nWeekly update for the LX-200 tool:\n\n- Tool design is finished and attached for your review meeting tomorrow.\n- Steel arrived and machining will start on schedule Nov 17.\n- T1 remains Jan 26.\n\nBest regards,\nJason Wu\nProject Manager, Hengtai Precision Mold"}, {"n": 51, "date": "Nov 10, 2026", "from": "Ryan Murphy <ryan.murphy@cypressbend.example>", "to": "Marco Reyes <marco.reyes@ardentoutdoor.example>, Jason Wu <jason.wu@hengtaimold.example>", "cc": "", "subject": "LX-200 tool design review: approved", "att": [{"name": "LX_200_tool_design_review__approved.pdf", "img": null}], "body": "Marco, Jason,\n\nThanks for the review this morning. Tool design is approved as presented, on drawing Rev B. Action items in the attached notes. Jason, please confirm steel cut for Nov 17.\n\nRyan"}, {"n": 52, "date": "Nov 10, 2026", "from": "Travis Hebert <travis.hebert@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Production schedule, week 46", "att": [{"name": "Production_schedule__week_46.pdf", "img": null}], "body": "Week 46 schedule attached. Gulf Coast Ag sample run on Press 6 Thursday.\n\nTravis"}, {"n": 53, "date": "Nov 11, 2026", "from": "Cypress Bend HR <hr@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Thank you to our veterans", "att": [], "body": "Today we thank the 9 veterans on the Cypress Bend team. Lunch is on us in the break room."}, {"n": 54, "date": "Nov 12, 2026", "from": "Nadine Comeaux <nadine.comeaux@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "FW: PA6 GF30 lead time update", "att": [], "body": "FYI. Filed it. I'll place the LX-200 resin order after T1 approval like we usually do.\n\nNadine Comeaux\nPurchasing, Cypress Bend Molding\n\n---------- Forwarded message ----------\nFrom: Tara Boudreaux, Gulfline Polymers\nSubject: PA6 GF30 lead time update\n\nHi Nadine, heads up: because of allocation at the producer, lead time on PA6 30% glass-filled, black, is now 9 weeks from PO, up from 4. Orders placed now are holding that date. Let me know if you want to reserve material.\n\nTara"}, {"n": 55, "date": "Nov 12, 2026", "from": "Nadine Comeaux <nadine.comeaux@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "FW: Holiday pickup schedule", "att": [], "body": "FYI.\n\nNadine Comeaux\n\n---------- Forwarded message ----------\nFrom: Bayou Express LTL\n\nNo pickups Nov 26-27 or Dec 25. Book holiday freight early."}, {"n": 56, "date": "Nov 13, 2026", "from": "Nadine Comeaux <nadine.comeaux@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Resin order timing", "att": [], "body": "Ryan, for planning: I usually place resin orders for new tools once T1 parts are approved, so we don't buy material for a tool that changes. For LX-200 that would be early February. Shout if you want it sooner.\n\nNadine"}, {"n": 57, "date": "Nov 16, 2026", "from": "Jason Wu <jason.wu@hengtaimold.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Weekly update, LX-200 tool, week 46", "att": [], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nDear Ryan,\n\nWeekly update for the LX-200 tool:\n\n- Thank you for approving the tool design on Nov 10.\n- Steel is arriving this week. Machining will begin when steel is in the shop.\n- T1 planned Jan 26.\n\nKindly confirm the status of the deposit payment.\n\nBest regards,\nJason Wu\nProject Manager, Hengtai Precision Mold"}, {"n": 58, "date": "Nov 16, 2026", "from": "Lily Chen <lily.chen@hengtaimold.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Holiday notice: Chinese New Year 2027", "att": [], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nDear valued customers,\n\nPlease note our factory will close for Chinese New Year from Jan 30 to Feb 22, 2027. Production will slow from Jan 23 as staff travel home. Please plan T1 samples and shipments accordingly.\n\nWishing you a prosperous new year,\nHengtai Precision Mold"}, {"n": 59, "date": "Nov 16, 2026", "from": "Mike Theriot <mike.theriot@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Ardent dinner", "att": [], "body": "Dinner with Dana went great. She mentioned their retail reset is locked for Apr 20, so they need our first shipment no later than Apr 6. She said she's already told her VP that date.\n\nMike"}, {"n": 60, "date": "Nov 16, 2026", "from": "Denise Marceaux <denise.marceaux@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "November note from Denise", "att": [], "body": "Team, October was our best shipping month this year. Safety: two near misses, no injuries. Thank you for the extra effort on Kestrel and Bayline. Next big push: Ardent.\n\nDenise"}, {"n": 61, "date": "Nov 18, 2026", "from": "Pelican Freight <advisories@pelicanfreight.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "Pelican Freight advisory: pre-Lunar New Year bookings", "att": [], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nShippers moving cargo from South China before Lunar New Year: book sailings by Jan 8. Space is tightening and rates are rising. After the holiday, expect two to three weeks before schedules recover.\n\nPelican Freight"}, {"n": 62, "date": "Nov 18, 2026", "from": "Cypress Bend HR <hr@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Thanksgiving schedule", "att": [], "body": "The plant is closed Thursday Nov 26 and Friday Nov 27. Second shift runs Wednesday until 6 p.m."}, {"n": 63, "date": "Nov 20, 2026", "from": "Sam Okafor <sam.okafor@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "LX-200 engineering hours this week", "att": [], "body": "Ryan,\n\nHours are entered in the program board. We're at 86 of the 120 budgeted engineering hours. About 18 of those went to reworking the tool design review for the thicker rib, which came up when Mike mentioned it in the hallway. The design review checklist is about half closed.\n\nSam Okafor\nEngineering Lead, Cypress Bend Molding"}, {"n": 64, "date": "Nov 20, 2026", "from": "Cypress Bend Safety Committee <safety@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Hearing protection audit next week", "att": [], "body": "Hearing protection audit on the molding floor next Tuesday and Wednesday. Plugs and muffs at every entrance."}, {"n": 65, "date": "Nov 21, 2026", "from": "Paul Landry <paul.landry@cypressbend.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "FW: Senior Program Manager opportunity", "att": [], "body": "See below. Anything needed from us?\n\nPaul Landry\n\n---------- Forwarded message ----------\nFrom: Gulf Coast Talent Partners\n\nHi Ryan, I came across your profile and have a Senior Program Manager role with a growing manufacturer in Baton Rouge. Open to a quick call next week?"}, {"n": 66, "date": "Nov 22, 2026", "from": "Denise Marceaux <denise.marceaux@cypressbend.example>", "to": "All Staff <staff@cypressbend.example>", "cc": "Ryan Murphy <ryan.murphy@cypressbend.example>", "subject": "Monday leadership meeting", "att": [], "body": "Monday 9 a.m. leadership meeting. Program managers, bring a one-line status and any decisions you need from us. Ardent is on the list.\n\nDenise"}], "m67": {"n": 67, "date": "Nov 23, 2026", "from": "Jason Wu <jason.wu@hengtaimold.example>", "to": "Ryan Murphy <ryan.murphy@cypressbend.example>", "cc": "", "subject": "URGENT: LX-200 Rev C impact on tool and T1 date", "att": [], "body": "CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nDear Ryan,\n\nToday we received drawing Rev C from your sales team. The rib change from 1.5 mm to 2.0 mm affects the slider design. We need 8 more working days for tool design, and the design must be approved again.\n\nNew T1 date: Feb 5, 2027.\n\nPlease also note our factory closes for Chinese New Year from Jan 30 and reopens Feb 22. If T1 cannot be completed before Jan 30, it will be after Feb 22.\n\nWe are still waiting for the deposit of USD 28,000 to order steel.\n\nPlease advise how you want to proceed.\n\nBest regards,\nJason Wu\nProject Manager, Hengtai Precision Mold"}, "steps": [], "expect": {"scout": {"label": "Scout", "finds": []}, "ledger": {"label": "Ledger", "finds": []}, "foreman": {"label": "Foreman", "finds": []}, "m67": {"label": "After Message 67", "finds": []}}, "nslides": 52, "chat": [{"Date": "Oct 6, 2026", "Channel": "#lx200-program", "Who": "Mike Theriot", "Message": "Ardent PO is in! $80k tooling on PO 4500-1187. Dana says the spring launch is locked, retail resets are booked."}, {"Date": "Oct 6, 2026", "Channel": "#lx200-program", "Who": "Ryan Murphy", "Message": "Great news. Kicking off with Hengtai this week."}, {"Date": "Oct 14, 2026", "Channel": "#lx200-program", "Who": "Mike Theriot", "Message": "Marco texted: tiny rib tweak on LX-200, 1.5 to 2.0 mm. He says it doesn't affect us. Saved his file to the design folder."}, {"Date": "Oct 14, 2026", "Channel": "#lx200-program", "Who": "Sam Okafor", "Message": "👍"}, {"Date": "Oct 21, 2026", "Channel": "#lx200-program", "Who": "Sam Okafor", "Message": "DFM closed. Releasing the tool design to Hengtai on Rev B."}, {"Date": "Oct 28, 2026", "Channel": "#lx200-program", "Who": "Lena Guidry", "Message": "Heads up: I'm holding the Hengtai LX-200 wire. The bank details on their form don't match our file. Someone needs to do a verification call to a known contact before I send."}, {"Date": "Oct 28, 2026", "Channel": "#lx200-program", "Who": "Nadine Comeaux", "Message": "I can try Thursday?"}, {"Date": "Nov 2, 2026", "Channel": "#lx200-program", "Who": "Paul Landry", "Message": "Anyone know where the black PP regrind bin went?"}, {"Date": "Nov 2, 2026", "Channel": "#lx200-program", "Who": "Travis Hebert", "Message": "By the dock door."}, {"Date": "Nov 9, 2026", "Channel": "#lx200-program", "Who": "Ryan Murphy", "Message": "Hengtai says steel arrived and machining starts Nov 17. 👍"}, {"Date": "Nov 12, 2026", "Channel": "#lx200-program", "Who": "Nadine Comeaux", "Message": "FYI Gulfline says PA6 GF30 is 9 weeks now. I'll order after T1 like always."}, {"Date": "Nov 13, 2026", "Channel": "#lx200-program", "Who": "Joelle Arceneaux", "Message": "Reminder: ISO audit Dec 8-9. Program files need current drawing revisions."}, {"Date": "Nov 16, 2026", "Channel": "#lx200-program", "Who": "Mike Theriot", "Message": "Dinner with Dana went great. She told her VP Apr 6. No wiggle room."}, {"Date": "Nov 18, 2026", "Channel": "#lx200-program", "Who": "Denise Marceaux", "Message": "Ardent is on Monday's leadership list. One-line status, please."}, {"Date": "Nov 20, 2026", "Channel": "#lx200-program", "Who": "Sam Okafor", "Message": "Logged 86 of 120 hours on LX-200. About 18 of that was rib rework after Mike mentioned the change in the hallway."}, {"Date": "Nov 20, 2026", "Channel": "#lx200-program", "Who": "Paul Landry", "Message": "Food truck Friday is back 🙌"}, {"Date": "Nov 21, 2026", "Channel": "#lx200-program", "Who": "Lena Guidry", "Message": "Still holding the Hengtai LX-200 wire. Did anyone make the verification call? The Nov 20 AP run went out without it."}]};
+const store={get(k,d){try{const v=localStorage.getItem('lx200stage.'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('lx200stage.'+k,JSON.stringify(v))}catch(e){}}};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const nameOf=f=>f.replace(/\s*<.*$/,'').trim();
+const short=d=>d.replace(/, \d{4}$/,'');
+const DOCS={quote:['docs/Hengtai_Quotation_LX-200.webp','Hengtai quotation (msg 7)'],revb:['docs/LX-200_Drawing_RevB_SIGNED.webp','Drawing Rev B, signed (msg 25)'],revc:['docs/LX-200_Drawing_RevC.webp','Drawing Rev C (msg 21)']};
+function lightbox(list){$('lbimgs').innerHTML=list.map(([src,cap])=>`<figure><img src="${src}" alt="${esc(cap)}"><figcaption>${esc(cap)}</figcaption></figure>`).join('');$('lb').classList.add('on');}
+
+/* ---------- views ---------- */
+let view=store.get('view','prompts');if(view==='slides'||view==='hood')view='prompts';
+const hints={inbox:'↑ ↓ messages',chat:'',live:'Findings land here as your Bots post them',grok:'Optional: run your own live world',prompts:'Copy, then paste into Grok Bot'};
+function show(v){view=v;store.set('view',v);clearInk();if(v==='live'&&typeof world!=='undefined'&&world.data){(world.data.findings||[]).forEach(x=>world.seenF.add(JSON.stringify(x)));$('fbadge').classList.remove('on');}document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));$('hint').textContent=hints[v]||'';examples();}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>show(t.dataset.v));
+
+
+/* ---------- prompts ---------- */
+const PROMPTS=[{"g": "Files", "lead": "Download these first. In Grok Bot, attach them with the paperclip in the same message as the prompt.", "files": [{"f": "LX-200_Practice_Inbox.txt", "n": "The 66 emails. Scout and Ledger."}, {"f": "LX-200_Program_Board.xlsx", "n": "The program board. Ledger and Foreman."}, {"f": "Hengtai_Quotation_LX-200.pdf", "n": "The tool builder's quote (message 7). Scout."}, {"f": "LX-200_Drawing_RevB_SIGNED.pdf", "n": "The drawing the customer signed (message 25). Scout."}, {"f": "LX-200_Drawing_RevC.pdf", "n": "The later revision (message 21). Scout."}, {"f": "README.txt", "n": "The scenario in two minutes."}, {"f": "Build_Along_Bot_Prompts.txt", "n": "Every prompt on this page, as one file."}, {"f": "Build_Along_Setup_Guide.txt", "n": "Setup steps for building along."}, {"f": "LX-200_World.xlsx", "n": "Your own live world: the workbook (Grok Bot tab has the steps)."}, {"f": "LX-200_World_Script.gs", "n": "Your own live world: the Apps Script."}, {"f": "Scout instructions.txt", "n": "Drive way: Scout's job description."}, {"f": "Ledger instructions.txt", "n": "Drive way: Ledger's job description."}, {"f": "Foreman instructions.txt", "n": "Drive way: Foreman's job description."}, {"f": "Drive_Way_Setup.txt", "n": "Drive way: setup walkthrough."}, {"f": "Plan_Checker_Prompt.txt", "n": "Plan Checker for your own plan."}]}, {"g": "Live build · Scout", "items": [{"t": "Scout prompt", "n": "New Bot named Scout. Paste this AND attach LX-200_Practice_Inbox.txt plus the three PDFs in the same message.", "x": "You are Scout, a program-management assistant. Your job is to read the program's email and attachments and find\nwhat changed: dates, lead times, quantities, prices, drawing revisions, and wording that softens an earlier claim.\n\nProgram: [LX-200 lantern housing tooling, Cypress Bend Molding for Ardent Outdoor Gear]\nIdentifiers: [customer PO 4500-1187, tool PO CB-T-0412, drawing ADG-LX200-001]\nKey people: [Dana Whitfield, Marco Reyes, Priya Shah (customer); Jason Wu, Lily Chen (Hengtai Precision Mold,\ntool builder); Tara Boudreaux (Gulfline Polymers, resin); Cypress Bend team]\nInputs: [LX-200_Practice_Inbox.txt, Hengtai_Quotation_LX-200.pdf, LX-200_Drawing_RevB_SIGNED.pdf,\nLX-200_Drawing_RevC.pdf]\n\nYour lane:\n- Your job: what changed in the email and attachments (dates, lead times, quantities, prices, revisions, wording).\n- Not your job: payments, money and hours (that's Ledger) or the overall verdict (that's Foreman). If you notice\n  one, mention it in one line and move on.\n- If a file you need is missing, say which one and stop. Don't guess what it says.\n- If Foreman asks for your report, send it the table, exactly as you'd give it to me.\n\nRules you always follow:\n- Every finding answers three questions: what is actually true right now, what has to happen next, and who owns it.\n- Every claim gets one status word: CONFIRMED, IN PROGRESS, PLANNED, ESTIMATE, AWAITING INPUT, AT RISK or COMPLETE.\n  PLANNED is never CONFIRMED.\n- Treat these as NOT done until the evidence says so: substantially complete, sampling complete, approved (which\n  revision or gate?), ready to ship, released, on schedule (against which date?), parts look good, no issues.\n- Match an email to the program only by program name, part number, PO number or the people on the program.\n  Never by vendor name alone.\n- Most email is noise. Ignore anything that doesn't change a fact, date, amount, owner or approval.\n- Read attachments. The controlling revision, terms or approval is often in the attachment, not the email body.\n- Cite evidence by message number and date.\n- Never send, reply, forward or change anything. You only read and report.\n\nDo this:\n1. Read every email in date order. Skip anything that isn't about this program.\n2. For each supplier, compare each update with that supplier's earlier claims. Flag any claim that was walked back\n   or softened (for example \"will\" becoming \"should,\" or \"arrived\" becoming \"arriving\").\n3. Pull out every date, lead time, quantity and condition. Note conditions hidden in attachments.\n4. For drawings, answer three questions separately: which revision is technically controlling, which revision the\n   supplier quoted or is building to, and which revision the customer approved.\n5. Ignore lookalikes: other programs, other parts, other POs, misdirected emails.\n\nReport as a table with these columns: Finding | Status word (one of the seven above) | Evidence (message number and date) | What has to\nhappen next | Who owns it.\nThen list, in one line each, anything you looked at and decided was NOT about this program, and why.\nKeep it under 300 words.", "big": 1, "files": ["LX-200_Practice_Inbox.txt", "Hengtai_Quotation_LX-200.pdf", "LX-200_Drawing_RevB_SIGNED.pdf", "LX-200_Drawing_RevC.pdf"]}, {"t": "Then", "x": "Remember your job, sources and rules."}, {"t": "If it's idle after a minute", "x": "Run your review now."}]}, {"g": "Live build · Ledger", "items": [{"t": "Ledger prompt", "n": "New Bot named Ledger. Paste this AND attach LX-200_Practice_Inbox.txt plus LX-200_Program_Board.xlsx in the same message.", "x": "You are Ledger, a program-management assistant. Your job is to follow the money and the hours, and to find any\nplace where money, hours or payments don't match what the program board says.\n\nProgram: [LX-200 lantern housing tooling]\nIdentifiers: [customer PO 4500-1187, tool PO CB-T-0412]\nInputs: [LX-200_Practice_Inbox.txt, LX-200_Program_Board (tabs: Payments, Budget & Hours)]\n\nYour lane:\n- Your job: money in, money out, payments and hours against the board.\n- Not your job: drawing revisions and supplier wording (that's Scout) or the overall verdict (that's Foreman).\n  If you notice one, mention it in one line and move on.\n- If a file you need is missing, say which one and stop. Don't guess what it says.\n- If Foreman asks for your report, send it the table, exactly as you'd give it to me.\n\nRules you always follow:\n- Every finding answers three questions: what is actually true right now, what has to happen next, and who owns it.\n- Every claim gets one status word: CONFIRMED, IN PROGRESS, PLANNED, ESTIMATE, AWAITING INPUT, AT RISK or COMPLETE.\n  PLANNED is never CONFIRMED.\n- Treat these as NOT done until the evidence says so: substantially complete, sampling complete, approved (which\n  revision or gate?), ready to ship, released, on schedule (against which date?), parts look good, no issues.\n- Match an email to the program only by program name, part number, PO number or the people on the program.\n  Never by vendor name alone.\n- Most email is noise. Ignore anything that doesn't change a fact, date, amount, owner or approval.\n- Read attachments. The controlling revision, terms or approval is often in the attachment, not the email body.\n- Cite evidence by message number and date.\n- Never send, reply, forward or change anything. You only read and report.\n\nDo this:\n1. For each gate, compare money in (from the customer) with money out (to suppliers). Flag any supplier payment\n   that is due but not confirmed sent, and anything blocking it.\n2. Treat \"requested,\" \"being processed\" and \"will send\" as not paid. Look for proof: a confirmation, or the payment\n   on an accounts-payable run.\n3. Match payments by PO number, not by vendor name. A payment to the right vendor for a different PO doesn't count.\n4. Compare hours used with work complete for each phase. Flag any phase where hours used are more than 15 points\n   ahead of percent complete.\n5. Note any cost the budget doesn't cover.\n\nReport as a table with these columns: Finding | Status word (one of the seven above) | Evidence (message number and date, or board tab) |\nWhat has to happen next | Who owns it.\nThen list, in one line each, anything you looked at and ruled out, and why.\nKeep it under 250 words.", "big": 1, "files": ["LX-200_Practice_Inbox.txt", "LX-200_Program_Board.xlsx"]}, {"t": "Then", "x": "Remember your job, sources and rules."}, {"t": "If it's idle after a minute", "x": "Run your review now."}]}, {"g": "Live build · Foreman", "items": [{"t": "Foreman prompt", "n": "New Bot named Foreman. Paste this AND attach LX-200_Program_Board.xlsx in the same message.", "x": "You are Foreman, the lead program-management assistant. You read what Scout and Ledger found, check it against the\nprogram board and the calendar, and write one brief for the program manager.\n\nProgram: [LX-200 lantern housing tooling. Customer's first production shipment is promised for Apr 6, 2027.]\nToday: [Nov 23, 2026]\nInputs: [Scout's report, Ledger's report, LX-200_Program_Board (tabs: Gates, Schedule, Documents)]\n\nYour lane:\n- Your job: judge the program from Scout's report, Ledger's report, the board and the calendar, and write one brief.\n- Not your job: reading the inbox for new findings, or redoing Scout's or Ledger's work.\n- Your team: the Bots named Scout and Ledger. When I say \"Get Scout's and Ledger's reports,\" message each of them,\n  ask for its report, and wait for both.\n- If you don't have both reports, reply \"Waiting on: Scout\" (or Ledger, or both) and stop. Don't fill the gap\n  yourself.\n\nRules you always follow:\n- Every finding answers three questions: what is actually true right now, what has to happen next, and who owns it.\n- Every claim gets one status word: CONFIRMED, IN PROGRESS, PLANNED, ESTIMATE, AWAITING INPUT, AT RISK or COMPLETE.\n  PLANNED is never CONFIRMED.\n- Treat these as NOT done until the evidence says so: substantially complete, sampling complete, approved (which\n  revision or gate?), ready to ship, released, on schedule (against which date?), parts look good, no issues.\n- Match an email to the program only by program name, part number, PO number or the people on the program.\n  Never by vendor name alone.\n- Most email is noise. Ignore anything that doesn't change a fact, date, amount, owner or approval.\n- Read attachments. The controlling revision, terms or approval is often in the attachment, not the email body.\n- Cite evidence by message number and date.\n- Never send, reply, forward or change anything. You only read and report.\n\nDo this:\n1. For every gate on the board, ask: does the evidence support this status? A date with an unfinished prerequisite\n   is AT RISK even if nobody has said \"delay.\"\n2. Follow each problem downstream. If one date moves, what moves after it, and does the promised date still hold?\n3. Check every date against holidays and shutdowns, including Lunar New Year for suppliers in China and US holidays.\n4. Unless the evidence says otherwise, assume: customer engineering approval 2-7 workdays, customer quality approval\n   5-15 workdays, internal technical sign-off 0-3 workdays, leadership decision 1-5 workdays.\n5. Look for two ordinary messages that contradict each other. That's where most risk shows up.\n\nFormat the brief exactly like this, so it can be compared with other runs:\n- Verdict: one line, starting with one status word.\n- Risks, most serious first, as a table: Risk | Status word (one of the seven above) | Evidence (message number or board tab) | What has to\n  happen next | Who owns it\n- Decisions needed from the program manager, each with two or three options.\n- Ruled out: one line on what you checked and set aside.\nKeep it under 250 words. Plain sentences. No hype.", "big": 1, "files": ["LX-200_Program_Board.xlsx"]}, {"t": "Then", "x": "Remember your job, sources and rules."}, {"t": "Foreman pulls the reports", "x": "Get Scout's and Ledger's reports, then tell me if this program is on track."}, {"t": "Fallback if a report never arrives", "n": "Copy that Bot's table into Foreman yourself, then send:", "x": "Here is the report you were waiting on. Write the brief."}]}, {"g": "Message 67 · live-built Bots", "items": [{"t": "Message 67", "n": "Paste into Scout AND into Ledger.", "x": "Message 67 of 67\nDate:    Nov 23, 2026\nFrom:    Jason Wu <jason.wu@hengtaimold.example>\nTo:      Ryan Murphy <ryan.murphy@cypressbend.example>\nSubject: URGENT: LX-200 Rev C impact on tool and T1 date\n------------------------------------------------------------------------------\nCAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\n\nDear Ryan,\n\nToday we received drawing Rev C from your sales team. The rib change from 1.5 mm to 2.0 mm affects the slider design. We need 8 more working days for tool design, and the design must be approved again.\n\nNew T1 date: Feb 5, 2027.\n\nPlease also note our factory closes for Chinese New Year from Jan 30 and reopens Feb 22. If T1 cannot be completed before Jan 30, it will be after Feb 22.\n\nWe are still waiting for the deposit of USD 28,000 to order steel.\n\nPlease advise how you want to proceed.\n\nBest regards,\nJason Wu\nProject Manager, Hengtai Precision Mold", "big": 1, "hold": 1}, {"t": "With it, in Scout and Ledger", "x": "Read this new message and update your findings. Only what it changes."}, {"t": "Then in Foreman", "x": "New message. Get Scout's and Ledger's updates, then tell me what changed and what I need to decide today."}]}, {"g": "Drive way (your own world)", "items": [{"t": "Roll call (each Bot)", "x": "Who are you, what commands do you respond to, and what does line 2 of your instructions file say?"}, {"t": "Run the team (LX Foreman)", "x": "Run the team."}, {"t": "After Deliver Message 67 (LX Foreman)", "x": "A new message came in."}, {"t": "Update the brief (LX Foreman)", "x": "Update the brief."}, {"t": "Fix a crossed Bot (LX Scout shown)", "n": "Change the name and file for LX Ledger or LX Foreman.", "x": "Forget any copy of your instructions you remember. You are LX Scout. Search the LX-200 World folder for \"Scout instructions.txt\", open it fresh, and follow it. Then quote line 2 of the file and list every command it gives you."}], "lead": "Only after you set up your own live world (Grok Bot tab). Name your Bots LX Scout, LX Ledger and LX Foreman."}, {"g": "Make it repeatable", "items": [{"t": "Save as a skill (in Scout)", "x": "Save the process we just used as a skill called LX-200 review."}, {"t": "Routine (in Foreman)", "x": "Every weekday at 7:00 AM, run the LX-200 brief."}]}, {"g": "Plan Checker", "items": [{"t": "Plan Checker prompt", "n": "New Bot. Paste this, then attach a plan.", "x": "You are Plan Checker. You review a project plan and report what doesn't hold up. You only read and report.\n\nInputs: the plan I attach (Excel, Google Sheets, or a CSV export from any PM tool). If I also give you email, notes or supplier updates, treat them as evidence.\n\n1. Map the plan first: list the tabs and what each column means. Merged cells, mixed date formats and free-text status are normal; work through them. If a header, color code or abbreviation is unclear, ask me once instead of guessing.\n2. Then look for:\n   - Status with no evidence: done, complete or green, and nothing confirms it.\n   - Dates that didn't move: a predecessor slipped or isn't finished, but the dates downstream stayed put.\n   - Past due but still open.\n   - Effort ahead of progress: hours or cost used faster than work completed.\n   - Missing owners or dates: TBD, blank, or a team instead of a person.\n   - Contradictions between tabs.\n   - Risks the plan implies but the risk log doesn't list.\n   - Holidays, shutdowns and lead times the dates ignore.\n3. For every finding, give: what's true now, what happens next, who owns it, one status word (CONFIRMED, IN PROGRESS, PLANNED, ESTIMATE, AWAITING INPUT, AT RISK, COMPLETE), and the tab and row it came from.\n4. Never edit the plan. Recommend the change; I make it.\n\nRemember this job and these rules.", "big": 1}]}];
+(function(){
+ const nav=$('pnav'),list=$('plist');let h='<div class="lab">Copy into Grok Bot</div>',b='';
+ const chip=f=>`<a class="fchip" href="files/${encodeURI(f)}" download>${esc(f)}<span>↓</span></a>`;
+ PROMPTS.forEach((g,gi)=>{h+=`<a data-g="${gi}">${esc(g.g)}</a>`;b+=`<div class="pg" id="pg${gi}"><h2>${esc(g.g)}</h2>`+(g.lead?`<p class="plead">${esc(g.lead)}</p>`:'')+(g.files?`<div class="pc flist">`+g.files.map(x=>`<div class="frow">${chip(x.f)}<span class="pn">${esc(x.n||'')}</span></div>`).join('')+`</div>`:'')+(g.items||[]).map((it,ii)=>`<div class="pc${it.big?' big':''}${it.hold?' hold':''}"><div class="ph2"><div class="pt">${esc(it.t)}</div>${it.hold?`<button class="xp sh">Show</button>`:''}${it.big?`<button class="xp ex2" data-x="${gi}-${ii}">Expand</button>`:''}<button class="cp" data-c="${gi}-${ii}">Copy</button></div>${it.n?`<div class="pn">${esc(it.n)}</div>`:''}${it.files?`<div class="fchips"><span class="fl">Attach</span>${it.files.map(chip).join('')}</div>`:''}<pre id="pp${gi}-${ii}">${esc(it.x)}</pre></div>`).join('')+'</div>';});
+ nav.innerHTML=h;list.innerHTML=b;
+ nav.querySelectorAll('a').forEach(a=>a.onclick=()=>$('pg'+a.dataset.g).scrollIntoView({behavior:'smooth',block:'start'}));
+ list.querySelectorAll('.sh').forEach(x=>x.onclick=()=>{const c=x.closest('.pc');c.classList.toggle('shown');x.textContent=c.classList.contains('shown')?'Hide':'Show';});
+ list.querySelectorAll('.ex2').forEach(x=>x.onclick=()=>{const c=x.closest('.pc');c.classList.toggle('open');x.textContent=c.classList.contains('open')?'Collapse':'Expand';});
+ list.querySelectorAll('.cp').forEach(btn=>btn.onclick=async()=>{const [gi,ii]=btn.dataset.c.split('-').map(Number);const txt=PROMPTS[gi].items[ii].x;let ok=false;
+   try{await navigator.clipboard.writeText(txt);ok=true;}catch(e){const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{ok=document.execCommand('copy');}catch(_){}ta.remove();}
+   btn.textContent=ok?'Copied':'Select + Cmd+C';btn.classList.toggle('ok',ok);setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok');},1600);});
+})();
+/* ---------- slides ---------- */
+const NS=D.nslides; let sl=Math.min(store.get('slide',0),NS-1);
+const pad=n=>String(n).padStart(2,'0');
+function slide(i){if(i<0||i>=NS)return;sl=i;store.set('slide',i);clearInk();setTimeout(examples,0);var im=$('slideimg');im.classList.add('fade');im.onload=function(){im.classList.remove('fade')};im.src='slides/'+pad(i+1)+'.webp';$('slideimg').alt='Slide '+(i+1);}
+for(let i=1;i<=NS;i++){const im=new Image();im.src='slides/'+pad(i)+'.webp';}
+$('sl-prev').onclick=()=>slide(sl-1);$('sl-next').onclick=()=>slide(sl+1);
+
+/* ---------- inbox ---------- */
+let msgs=D.msgs.slice(), delivered=false, filt='all', sel=null, unread=new Set();
+const isLX=m=>/LX-200|LX200/i.test(m.subject+' '+m.body.slice(0,400));
+function visible(){const q=$('q').value.trim().toLowerCase();return msgs.slice().sort((a,b)=>b.n-a.n).filter(m=>(filt==='all'||(filt==='lx'&&isLX(m))||(filt==='att'&&m.att.length))&&(!q||(m.from+' '+m.subject+' '+m.body).toLowerCase().includes(q)));}
+function counts(){$('cnt-all').textContent=msgs.length;$('cnt-lx').textContent=msgs.filter(isLX).length;$('cnt-att').textContent=msgs.filter(m=>m.att.length).length;}
+function snippet(b){return b.replace(/^CAUTION:.*\n+/,'').replace(/\s+/g,' ').slice(0,110);}
+function rows(){const v=visible();$('rows').innerHTML=v.map(m=>`<div class="row${m.n===sel?' sel':''}${unread.has(m.n)?' unread':''}" data-n="${m.n}"><div class="fr">${unread.has(m.n)?'<span class="newchip">NEW</span>':''}${esc(nameOf(m.from))}${m.att.length?'<span class="clip">📎</span>':''}</div><div class="dt">${short(m.date)}</div><div class="su"><b>${esc(m.subject)}</b> — ${esc(snippet(m.body))}</div></div>`).join('')||'<div style="padding:20px;color:#5A5D63">No messages match.</div>';
+  $('rows').querySelectorAll('.row').forEach(r=>r.onclick=()=>open(+r.dataset.n));
+  const s=$('rows').querySelector('.row.sel'); if(s) s.scrollIntoView({block:'nearest'});}
+function open(n){sel=n;unread.delete(n);const m=msgs.find(x=>x.n===n);rows();
+  $('read').innerHTML=`<h2>${esc(m.subject)}</h2><div class="hdr"><span>From</span><b>${esc(m.from)}</b><span class="mnum">Message ${m.n} of ${msgs.length}</span><span>To</span><span>${esc(m.to)}</span><span>${esc(m.date)}</span>${m.cc?`<span>Cc</span><span>${esc(m.cc)}</span><span></span>`:''}</div><div class="body">${esc(m.body)}</div>${m.att.length?`<div class="atts">${m.att.map((a,i)=>a.img?`<div class="att open" data-i="${i}"><span class="ic">PDF</span>${esc(a.name)}</div>`:`<div class="att na"><span class="ic">PDF</span>${esc(a.name)}<small>not in the practice pack</small></div>`).join('')}</div>`:''}`;
+  $('read').scrollTop=0;
+  $('read').querySelectorAll('.att.open').forEach(e=>e.onclick=()=>lightbox([[m.att[+e.dataset.i].img,m.att[+e.dataset.i].name]]));}
+document.querySelectorAll('.fold').forEach(f=>f.onclick=()=>{filt=f.dataset.f;document.querySelectorAll('.fold').forEach(x=>x.classList.toggle('on',x===f));rows();});
+$('q').oninput=rows;
+$('lbx').onclick=()=>$('lb').classList.remove('on');$('lb').onclick=e=>{if(e.target.id==='lb')$('lb').classList.remove('on')};
+function deliver(){if(world.url){worldAction('deliver67');return;}if(delivered)return;delivered=true;msgs.push(D.m67);unread.add(67);counts();rows();$('deliver').disabled=true;$('deliver').textContent='Message 67 delivered';$('ph-m67').disabled=false;
+  const t=$('toast');t.innerHTML=`<small>New message · ${esc(nameOf(D.m67.from))}</small>${esc(D.m67.subject)}`;t.classList.add('on');t.onclick=()=>{show('inbox');open(67);t.classList.remove('on')};setTimeout(()=>t.classList.remove('on'),9000);}
+$('deliver').onclick=deliver;
+counts();rows();
+
+/* ---------- under the hood ---------- */
+const ST=D.steps, PH=['scout','ledger','handoff','foreman','m67'];
+let si=0, playing=false, timer=null, speed=1;
+const byN=n=>n===67?D.m67:D.msgs.find(m=>m.n===n);
+const vClass=v=>/RISK/.test(v)?'r':/CONFIRMED/.test(v)?'ok':/RULED/.test(v)?'ro':/→/.test(v)?'rt':'';
+function fdClass(v){return /CONFIRMED/.test(v)?'ok':/AWAITING/.test(v)?'aw':/ESTIMATE|LOGGED/.test(v)?'es':'';}
+function hreset(){pause();si=0;$('stream').innerHTML=D.msgs.map(m=>`<div class="sr" id="sr-${m.n}"><span class="nn">${m.n}</span><span class="ss">${esc(m.subject)}</span><span class="vv"></span></div>`).join('')+`<div class="sr" id="sr-67" style="display:none"><span class="nn">67</span><span class="ss">${esc(D.m67.subject)}</span><span class="vv"></span></div>`;
+  ['scout','ledger','pk','foreman'].forEach(k=>$('b-'+k).innerHTML='<div class="empty">Nothing yet.</div>');['scout','ledger','foreman'].forEach(k=>$('n-'+k).textContent='');
+  ['read','skip','ruled','route','flag'].forEach(k=>$('c-'+k).textContent='0');
+  $('log').innerHTML='';$('now').innerHTML=`<div class="who"><span class="dot"></span>Ready</div><h3>Press Play to watch Scout read the inbox.</h3><p>Or pick a phase above to jump straight to it.</p>`;
+  phases();}
+function bump(k){$('c-'+k).textContent=+$('c-'+k).textContent+1;}
+function add(box,html){const b=$('b-'+box);if(b.querySelector('.empty'))b.innerHTML='';b.insertAdjacentHTML('beforeend',html);b.lastElementChild.scrollIntoView({block:'nearest'});}
+function logline(cls,txt){$('log').insertAdjacentHTML('beforeend',`<div class="l">${txt}</div>`);$('log').scrollTop=1e9;}
+function apply(s,quiet){
+  const m=s.msg?byN(s.msg):null;
+  if(s.phase==='m67') $('sr-67').style.display='';
+  if(m){document.querySelectorAll('.sr.cur').forEach(e=>e.classList.remove('cur'));const r=$('sr-'+m.n);if(r){if(s.bot==='Scout'){r.className='sr '+s.kind;}r.classList.add('cur');r.querySelector('.vv').textContent=s.verdict==='SKIP'?'':s.verdict;r.scrollIntoView({block:'nearest'});}}
+  if(s.bot==='Scout'&&m&&s.phase==='scout'){bump('read');}
+  if(s.kind==='skip')bump('skip'); if(s.kind==='ruled')bump('ruled'); if(s.kind==='route')bump('route'); if(s.kind==='flag')bump('flag');
+  const bt=`<span class="b">[${s.bot.toLowerCase()}]</span>`;
+  const src=m?`msg ${m.n}`:(s.board?`board · ${s.board}`:'');
+  const vc=/RISK/.test(s.verdict||'')?'f':/RULED/.test(s.verdict||'')?'o':/CONFIRMED/.test(s.verdict||'')?'g':'';
+  if(s.kind==='start') logline('',`${bt} ${esc(s.title)}`);
+  else if(s.kind==='packet') logline('',`${bt} handoff → foreman: what changed · evidence · still open · owner`);
+  else logline('',`${bt} ${src}${s.rule?' · '+esc(s.rule):''} ${/^→/.test(s.verdict||'')?'':'→ '}<span class="${vc}">${esc(s.verdict||'')}</span>`);
+  if(quiet&&s.kind==='skip')return;
+  let h=`<div class="who"><span class="dot"></span>${esc(s.bot)}${s.kind==='packet'?' → Foreman':''}</div>`;
+  if(s.kind==='start') h+=`<h3>${esc(s.title)}</h3><p>${esc(s.note)}</p>`;
+  else if(s.kind==='packet') h+=`<h3>Handoff packet</h3>`+Object.entries(s.packet).map(([k,v])=>`<p><span class="rule">${esc(k)}</span>${esc(v)}</p>`).join('');
+  else { h+=`<h3>${m?`Message ${m.n} · ${esc(m.subject)}`:s.board?`Program board · ${esc(s.board)} tab`:'Checking downstream'}</h3>`;
+    if(s.rule) h+=`<span class="rule">Rule: ${esc(s.rule)}</span>`; if(s.verdict) h+=`<span class="verd ${vClass(s.verdict)}">${esc(s.verdict)}</span>`;
+    h+=`<p>${esc(s.note)}</p>`; if(s.decisions) h+=`<ol class="dec">${s.decisions.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`; }
+  $('now').innerHTML=h;
+  const cardSrc=m?`Msg ${m.n}`:(s.board?`Board · ${s.board}`:s.bot);
+  if(s.kind==='flag'||(s.kind==='ruled'&&s.bot==='Ledger')||(s.kind==='ctx'&&s.bot==='Ledger')){
+    const box=s.bot==='Scout'?'scout':s.bot==='Ledger'?'ledger':'foreman';
+    add(box,`<div class="fd ${s.kind==='ruled'?'aw':fdClass(s.verdict)}">${esc(s.note)}<small>${esc(s.verdict)} · ${esc(cardSrc)}</small></div>`);
+    $('n-'+box).textContent=$('b-'+box).querySelectorAll('.fd').length;}
+  if(s.kind==='packet') add('pk',`<div class="pk"><b>${esc(s.bot)} → Foreman</b>${Object.entries(s.packet).map(([k,v])=>`<div><i>${esc(k)}:</i> ${esc(v)}</div>`).join('')}</div>`);
+  if(s.kind==='verdict'){add('foreman',`<div class="fd">${esc(s.note)}<small>Verdict: ${esc(s.verdict)}</small><ol class="dec" style="font-size:12.5px;margin-top:6px">${s.decisions.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></div>`);$('n-foreman').textContent=$('b-foreman').querySelectorAll('.fd').length;}
+  phases();
+}
+function delay(s){const base=s.kind==='skip'?260:s.kind==='ruled'||s.kind==='route'||s.kind==='ctx'?1100:s.kind==='start'?1600:2600;return base/speed;}
+function phases(){const cur=ST[Math.max(si-1,0)]?.phase;document.querySelectorAll('.ph').forEach(b=>{const p=b.dataset.p;const first=ST.findIndex(s=>s.phase===p);const last=ST.map(s=>s.phase).lastIndexOf(p);b.classList.toggle('on',si>first&&si<=last&&cur===p);b.classList.toggle('done',si>last);});
+  $('ph-m67').disabled=!delivered; $('hood-wrap');document.getElementById('v-hood').classList.toggle('running',playing);}
+function next(){if(si>=ST.length){pause();return false;}const s=ST[si];if(s.phase==='m67'&&!delivered){pause();$('now').innerHTML=`<div class="who"><span class="dot"></span>Waiting</div><h3>Message 67 hasn't arrived yet.</h3><p>Deliver it from the Inbox tab when you're ready for the live moment.</p>`;return false;}si++;apply(s);return true;}
+function loop(){if(!playing)return;if(!next())return;const s=ST[si];if(!s||(s.phase!==ST[si-1].phase)){pause();return;}timer=setTimeout(loop,delay(ST[si-1]));}
+function play(){if(playing)return;playing=true;$('play').textContent='Pause';phases();loop();}
+function pause(){playing=false;clearTimeout(timer);$('play').textContent=si>=ST.length?'Done':'Play';phases();}
+$('play').onclick=()=>playing?pause():play();
+$('step').onclick=()=>{pause();next();};
+$('speed').onclick=()=>{speed=speed===1?2:speed===2?4:1;$('speed').textContent='Speed '+speed+'×';};
+$('hreset').onclick=hreset;
+document.querySelectorAll('.ph').forEach(b=>b.onclick=()=>{if(b.disabled)return;const p=b.dataset.p, first=ST.findIndex(s=>s.phase===p);pause();if(si>first){hreset();}while(si<first){const s=ST[si];si++;apply(s,true);}play();});
+hreset();
+
+/* ---------- grok compare ---------- */
+const EXP=D.expect; let gk='scout';
+let gurl=store.get('gurl','');$('gurl').value=gurl;
+function glink(){const a=$('glink');if(/^https?:\/\//.test(gurl)){a.href=gurl;a.style.opacity=1;a.onclick=null;}else{a.href='#';a.style.opacity=.5;a.onclick=e=>{e.preventDefault();$('gurl').focus();};}}
+$('gurl').onchange=()=>{gurl=$('gurl').value.trim();store.set('gurl',gurl);glink();};glink();
+const pastes={};
+function gsel(){$('gsel').innerHTML=Object.keys(EXP).map(k=>`<button data-k="${k}" class="${k===gk?'on':''}">${esc(EXP[k].label)}</button>`).join('');$('gsel').querySelectorAll('button').forEach(b=>b.onclick=()=>{gk=b.dataset.k;gsel();gout();gexp();});}
+function gout(){const t=pastes[gk]||'';if(!t){$('gout').innerHTML=`<textarea id="gta" placeholder="Paste ${esc(EXP[gk].label)}'s answer from Grok Bot here."></textarea>`;$('gta').oninput=e=>{pastes[gk]=e.target.value;if(e.target.value.trim().length>20)setTimeout(gout,400);};return;}
+  let h; try{h=marked.parse(t.replace(/</g,'&lt;'));}catch(e){h=`<pre style="white-space:pre-wrap">${esc(t)}</pre>`;} $('gout').innerHTML=`<div class="md">${h}</div>`;}
+let shown={};
+function gexp(){const e=EXP[gk];if(!shown[gk]){$('gexp').innerHTML=`<p style="color:#5A5D63;font-size:14px;margin:0">Hidden until you reveal it, so nobody sees the answers early.</p><button class="reveal" id="rv">Reveal what a good run finds</button>`;$('rv').onclick=()=>{shown[gk]=true;gexp();};return;}
+  $('gexp').innerHTML=e.finds.map(f=>`<div class="er"><span class="pill${/RISK/.test(f[0])?' r':''}">${esc(f[0])}</span><div>${esc(f[1])}<small>${esc(f[2])}</small></div></div>`).join('');}
+$('gclear').onclick=()=>{delete pastes[gk];gout();};
+gsel();gout();gexp();
+
+/* ---------- examples per slide ---------- */
+const EX={};
+let backTo=null;
+function act(a){
+  if(view==='slides') backTo=sl;
+  if(a.view){show(a.view);return;}
+  if(a.doc){lightbox(a.doc.map(k=>DOCS[k]));return;}
+  if('inbox' in a){$('q').value='';filt='all';document.querySelectorAll('.fold').forEach(x=>x.classList.toggle('on',x.dataset.f==='all'));show('inbox');rows();if(a.inbox)open(a.inbox);return;}
+  if(a.deliver){show('inbox');deliver();setTimeout(()=>open(67),600);return;}
+  if(a.hood){show('hood');const b=document.querySelector(`.ph[data-p="${a.hood}"]`);if(b&&!b.disabled)b.click();return;}
+  if(a.grok){gk=a.grok;gsel();gout();gexp();show('grok');return;}
+}
+function examples(){const ex=$('ex');
+  if(view==='slides'){const l=EX[sl+1]||[];ex.innerHTML=l.length?'<span class="exl">Examples</span>'+l.map((x,i)=>`<button class="chip" data-i="${i}">${esc(x[0])}</button>`).join(''):'';ex.querySelectorAll('.chip').forEach(b=>b.onclick=()=>act(l[+b.dataset.i][1]));}
+  else{ex.innerHTML=backTo!==null?`<button class="chip back" id="backbtn">← Back to slide ${backTo+1}</button>`:'';const b=$('backbtn');if(b)b.onclick=goBack;}}
+function goBack(){const t=backTo;backTo=null;show('slides');if(t!==null)slide(t);}
+/* ---------- pen ---------- */
+const ink=$('ink'),ctx=ink.getContext('2d');let penOn=false,drawing=false;
+function sizeInk(){const r=window.devicePixelRatio||1;ink.width=innerWidth*r;ink.height=(innerHeight-48)*r;ink.style.width=innerWidth+'px';ink.style.height=(innerHeight-48)+'px';ctx.setTransform(r,0,0,r,0,0);ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=5;ctx.strokeStyle='#E5483B';}
+function clearInk(){ctx.clearRect(0,0,ink.width,ink.height);}
+function pen(on){penOn=on;ink.classList.toggle('on',on);$('pen').classList.toggle('on',on);$('pen').textContent=on?'Pen on · C clears':'Pen';}
+$('pen').onclick=()=>pen(!penOn);
+ink.addEventListener('pointerdown',e=>{drawing=true;ink.setPointerCapture(e.pointerId);ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY);});
+ink.addEventListener('pointermove',e=>{if(!drawing)return;ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();});
+ink.addEventListener('pointerup',()=>{drawing=false;});
+addEventListener('resize',sizeInk);sizeInk();
+/* ---------- live world ---------- */
+const world={url:store.get('wurl',''),key:store.get('wkey',''),data:null,seenF:new Set(),timer:null,first:true};
+$('wurl').value=world.url;$('wkey').value=world.key;
+const DOCMAP={"Hengtai_Quotation_LX-200.pdf":"docs/Hengtai_Quotation_LX-200.webp","LX-200_Drawing_RevB_SIGNED.pdf":"docs/LX-200_Drawing_RevB_SIGNED.webp","LX-200_Drawing_RevC.pdf":"docs/LX-200_Drawing_RevC.webp"};
+function parseAtt(a){return String(a||'').split(';').map(x=>x.trim()).filter(Boolean).map(x=>{const name=x.replace(/\s*\(.*?\)\s*$/,'').trim();return {name,img:DOCMAP[name]||null};});}
+function connState(cls,txt){const c=$('conn');c.className='conn '+cls;c.textContent=txt;}
+function toastMsg(m){const t=$('toast');t.innerHTML=`<small>New message · ${esc(nameOf(m.from))}</small>${esc(m.subject)}`;t.classList.add('on');t.onclick=()=>{show('inbox');open(m.n);t.classList.remove('on')};setTimeout(()=>t.classList.remove('on'),9000);}
+function applyWorld(d){
+  world.data=d;
+  const wm=(d.inbox||[]).map(r=>({n:+r.Message,date:r.Date,from:r.From,to:r.To,cc:r.Cc,subject:r.Subject,att:parseAtt(r.Attachment),body:r.Body})).filter(m=>m.n);
+  if(wm.length){
+    const had=new Set(msgs.map(m=>m.n));
+    if(!world.first) wm.forEach(m=>{if(!had.has(m.n)){unread.add(m.n);toastMsg(m);}});
+    msgs=wm; delivered=wm.some(m=>m.n===67);
+    $('deliver').disabled=delivered;$('deliver').textContent=delivered?'Message 67 delivered':'Deliver Message 67';$('ph-m67').disabled=!delivered;
+    counts();rows();
+  }
+  if(d.chat) renderChat(d.chat);
+  renderFindings(d.findings||[]);
+  world.first=false;
+}
+async function poll(){
+  if(!world.url)return;
+  try{const r=await fetch(world.url,{cache:'no-store'});const d=await r.json();if(d.error)throw new Error(d.error);applyWorld(d);connState('live','Live: LX-200 World');$('wstat').textContent='Connected · '+new Date().toLocaleTimeString();}
+  catch(e){connState('err','Feed unreachable');}
+}
+function startWorld(){clearInterval(world.timer);world.first=true;if(world.url){poll();world.timer=setInterval(poll,4000);}else{connState('','Built-in data');}}
+async function worldAction(a){
+  if(!world.key){show('grok');$('wkey').focus();$('wstat').textContent='Enter the hub key first.';return;}
+  $('wstat').textContent=a==='reset'?'Resetting…':'Delivering Message 67…';
+  try{const r=await fetch(world.url+(world.url.includes('?')?'&':'?')+'action='+a+'&key='+encodeURIComponent(world.key),{cache:'no-store'});const d=await r.json();if(d.error){$('wstat').textContent='Error: '+d.error;return;}
+    if(a==='reset'){world.seenF=new Set();unread.clear();hreset();world.first=true;}
+    applyWorld(d);$('wstat').textContent=(a==='reset'?'World reset':'Message 67 delivered')+' · '+new Date().toLocaleTimeString();}
+  catch(e){$('wstat').textContent='Could not reach the feed.';}
+}
+$('wsave').onclick=()=>{world.url=$('wurl').value.trim();world.key=$('wkey').value.trim();store.set('wurl',world.url);store.set('wkey',world.key);startWorld();};
+$('wreset').onclick=()=>{if(!world.url){$('wstat').textContent='Connect the feed first.';return;}$('rmsg').textContent='Reset the LX-200 World? This restores every tab, removes Message 67 and clears all findings.';$('cmodal').classList.add('on');};
+$('cno').onclick=()=>$('cmodal').classList.remove('on');
+$('cyes').onclick=()=>{$('cmodal').classList.remove('on');worldAction('reset');};
+const initials=n=>String(n).split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase();
+function renderChat(c){let h='',last='';c.forEach(m=>{if(m.Date!==last){h+=`<div class="cday">${esc(m.Date)}</div>`;last=m.Date;}h+=`<div class="cm"><div class="av">${esc(initials(m.Who))}</div><div><b>${esc(m.Who)}</b><div class="tx">${esc(m.Message)}</div></div></div>`;});
+  $('cmsgs').innerHTML=h||'<div class="lempty">No messages.</div>';$('chatcount').textContent=c.length+' messages';}
+function fcls(s){s=String(s).toUpperCase();return /RISK/.test(s)?'r':/CONFIRMED|COMPLETE/.test(s)?'ok':/AWAITING/.test(s)?'aw':'';}
+function renderFindings(f){
+  $('lc-total').textContent=f.length;
+  const nb=$('fbadge');const fresh=f.filter(x=>!world.seenF.has(JSON.stringify(x))).length;
+  if(view!=='live'&&fresh&&!world.first){nb.textContent=fresh;nb.classList.add('on');}
+  if(!f.length){$('lbody').innerHTML='<div class="lempty">Waiting for the Bots. Findings appear here as they post them to the LX-200 World sheet.</div>';return;}
+  const groups={};f.forEach(x=>{const b=String(x.Bot||'Other').trim()||'Other';(groups[b]=groups[b]||[]).push(x);});
+  const order=['Scout','Ledger','Foreman'];const rank=k=>{const i=order.indexOf(k);return i<0?9:i;};
+  const keys=Object.keys(groups).sort((a,b)=>rank(a)-rank(b));
+  $('lbody').innerHTML=`<div class="lcols" style="grid-template-columns:repeat(${Math.min(Math.max(keys.length,1),4)},minmax(0,1fr))">`+keys.map(k=>`<div class="lcol"><h3>${esc(k)}<span>${groups[k].length}</span></h3>`+groups[k].slice().reverse().map(x=>{const isNew=!world.seenF.has(JSON.stringify(x))&&!world.first;return `<div class="lf ${fcls(x['Status word'])}${isNew?' new':''}"><div class="top"><span class="st">${esc(x['Status word']||'')}</span><span class="tm">${esc(x.Time||'')}</span></div><div class="ft">${(()=>{const t=String(x.Finding||'');return /^NEW:\s*/i.test(t)?'<span class="newchip">NEW</span>'+esc(t.replace(/^NEW:\s*/i,'')):esc(t)})()}</div><div class="ev">${x.Evidence?'<span class="k">Evidence</span><span>'+esc(x.Evidence)+'</span>':''}${x['What has to happen next']?'<span class="k">Next</span><span>'+esc(x['What has to happen next'])+'</span>':''}${x['Who owns it']?'<span class="k">Owner</span><span>'+esc(x['Who owns it'])+'</span>':''}</div></div>`;}).join('')+'</div>').join('')+'</div>';
+  if(view==='live'||world.first){f.forEach(x=>world.seenF.add(JSON.stringify(x)));if(view==='live')nb.classList.remove('on');}
+}
+renderChat(D.chat||[]);renderFindings([]);
+startWorld();
+
+/* ---------- keys ---------- */
+document.addEventListener('keydown',e=>{if(e.target.closest('input,textarea'))return;
+  if(e.key==='Escape'&&$('cmodal').classList.contains('on')){$('cmodal').classList.remove('on');return;}
+  if(e.key==='Escape'){if($('lb').classList.contains('on')){$('lb').classList.remove('on');return;}if(penOn){pen(false);return;}return;}
+  if(e.key==='p'||e.key==='P'){pen(!penOn);return;}
+  if(e.key==='c'||e.key==='C'){clearInk();return;}
+  
+  if(['1','2','3','4','5'].includes(e.key)){show(['prompts','inbox','chat','live','grok'][+e.key-1]);return;}
+  if(view==='slides'){if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();slide(sl+1);}if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();slide(sl-1);}}
+  if(view==='inbox'){const v=visible();let i=v.findIndex(m=>m.n===sel);if(e.key==='ArrowDown'||e.key==='j'){e.preventDefault();open(v[Math.min(i+1,v.length-1)].n);}if(e.key==='ArrowUp'||e.key==='k'){e.preventDefault();open(v[Math.max(i-1,0)].n);}}
+  if(view==='hood'){if(e.key===' '){e.preventDefault();playing?pause():play();}if(e.key==='ArrowRight'){pause();next();}}
+});
+show(view);slide(sl);
+
+$('gscp').onclick=async()=>{const txt="/**\n * LX-200 World: reset, deliver Message 67, and a read-only feed for the demo hub.\n * Paste into Extensions > Apps Script in the LX-200 World Google Sheet.\n * Fictional practice data only.\n */\nconst LIVE_TABS = ['Inbox','Team chat','Gates','Schedule','Budget & Hours','Payments','Documents','RAID','Contacts'];\nconst MESSAGE_67 = [67, \"Nov 23, 2026\", \"Jason Wu <jason.wu@hengtaimold.example>\", \"Ryan Murphy <ryan.murphy@cypressbend.example>\", \"\", \"URGENT: LX-200 Rev C impact on tool and T1 date\", \"\", \"CAUTION: This email originated from outside Cypress Bend Molding. Do not click links or open attachments unless you recognize the sender.\\n\\nDear Ryan,\\n\\nToday we received drawing Rev C from your sales team. The rib change from 1.5 mm to 2.0 mm affects the slider design. We need 8 more working days for tool design, and the design must be approved again.\\n\\nNew T1 date: Feb 5, 2027.\\n\\nPlease also note our factory closes for Chinese New Year from Jan 30 and reopens Feb 22. If T1 cannot be completed before Jan 30, it will be after Feb 22.\\n\\nWe are still waiting for the deposit of USD 28,000 to order steel.\\n\\nPlease advise how you want to proceed.\\n\\nBest regards,\\nJason Wu\\nProject Manager, Hengtai Precision Mold\"];\n\nfunction onOpen() {\n  SpreadsheetApp.getUi().createMenu('LX-200')\n    .addItem('Reset world', 'resetWorld')\n    .addItem('Deliver Message 67', 'deliver67')\n    .addSeparator()\n    .addItem('Set hub key', 'setHubKey')\n    .addToUi();\n}\n\nfunction resetWorld() {\n  const ss = SpreadsheetApp.getActive();\n  LIVE_TABS.forEach(name => {\n    const live = ss.getSheetByName(name), base = ss.getSheetByName('_base_' + name);\n    if (!live || !base) throw new Error('Missing tab: ' + name);\n    live.clearContents();\n    base.getDataRange().copyTo(live.getRange(1, 1));\n  });\n  const f = ss.getSheetByName('Findings');\n  if (f.getLastRow() > 1) f.getRange(2, 1, f.getLastRow() - 1, Math.max(f.getLastColumn(), 7)).clearContent();\n  setControl_('message67_delivered', 'FALSE');\n  setControl_('last_reset', new Date().toISOString());\n  setControl_('run_label', 'Opening');\n  return 'reset';\n}\n\nfunction deliver67() {\n  if (getControl_('message67_delivered') === 'TRUE') return 'already delivered';\n  const inbox = SpreadsheetApp.getActive().getSheetByName('Inbox');\n  inbox.appendRow(MESSAGE_67);\n  setControl_('message67_delivered', 'TRUE');\n  setControl_('run_label', 'Message 67');\n  return 'delivered';\n}\n\nfunction setHubKey() {\n  const ui = SpreadsheetApp.getUi();\n  const r = ui.prompt('Hub key', 'Pick a short private word. The hub asks for it before Reset or Deliver.', ui.ButtonSet.OK_CANCEL);\n  if (r.getSelectedButton() === ui.Button.OK) {\n    PropertiesService.getScriptProperties().setProperty('HUB_KEY', r.getResponseText().trim());\n    ui.alert('Saved.');\n  }\n}\n\n/** Web app: GET returns the world as JSON. ?action=reset|deliver67&key=... changes it. */\nfunction doGet(e) {\n  const p = (e && e.parameter) || {};\n  let result = 'ok';\n  if (p.action) {\n    const key = PropertiesService.getScriptProperties().getProperty('HUB_KEY') || '';\n    if (!key || p.key !== key) return json_({ error: 'bad key' });\n    if (p.action === 'reset') result = resetWorld();\n    else if (p.action === 'deliver67') result = deliver67();\n    else return json_({ error: 'unknown action' });\n  }\n  const ss = SpreadsheetApp.getActive();\n  return json_({\n    result: result,\n    updated: new Date().toISOString(),\n    control: readControl_(),\n    inbox: rows_(ss.getSheetByName('Inbox')),\n    chat: rows_(ss.getSheetByName('Team chat')),\n    findings: rows_(ss.getSheetByName('Findings'))\n  });\n}\n\nfunction rows_(sh) {\n  const v = sh.getDataRange().getDisplayValues();\n  const head = v.shift();\n  return v.filter(r => r.some(x => String(x).trim() !== '')).map(r => {\n    const o = {}; head.forEach((h, i) => o[h] = r[i]); return o;\n  });\n}\nfunction json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }\nfunction readControl_() {\n  const v = SpreadsheetApp.getActive().getSheetByName('Control').getDataRange().getDisplayValues();\n  const o = {}; v.slice(1).forEach(r => o[r[0]] = r[1]); return o;\n}\nfunction getControl_(k) { return readControl_()[k]; }\nfunction setControl_(k, val) {\n  const sh = SpreadsheetApp.getActive().getSheetByName('Control');\n  const v = sh.getDataRange().getValues();\n  for (let i = 1; i < v.length; i++) if (v[i][0] === k) { sh.getRange(i + 1, 2).setValue(val); return; }\n  sh.appendRow([k, val]);\n}\n";let ok=false;try{await navigator.clipboard.writeText(txt);ok=true;}catch(e){const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{ok=document.execCommand('copy');}catch(_){}ta.remove();}const b=$('gscp');b.textContent=ok?'Copied':'Select + Cmd+C';b.classList.toggle('ok',ok);setTimeout(()=>{b.textContent='Copy script';b.classList.remove('ok');},1600);};
+</script>
+</body>
+</html>
