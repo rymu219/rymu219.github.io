@@ -64,6 +64,8 @@ button{font:inherit;cursor:pointer}
 .lempty{padding:40px 26px;color:#7F8DA3;font-size:16px}
 .setcard{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:14px 16px;margin:14px 0 20px;font-size:13px;color:var(--muted)}
 .setcard b{color:var(--ink)}
+.keywrap{display:flex;gap:6px;align-items:center}.keywrap input{flex:1;min-width:0}
+.peek{flex:none;margin:4px 0 8px;background:#fff;border:1px solid var(--rule);border-radius:4px;padding:6px 10px;font:inherit;font-size:12px;color:var(--navy);cursor:pointer}.peek:hover{border-color:var(--navy)}
 .setcard input{font:inherit;font-size:12px;padding:6px 8px;border:1px solid var(--rule);border-radius:4px;width:100%;margin:4px 0 8px;box-sizing:border-box}
 .setcard .row2{display:flex;gap:8px;flex-wrap:wrap}
 .setcard button{background:var(--ink);color:#fff;border:none;border-radius:4px;padding:7px 12px;font-size:13px}
@@ -393,6 +395,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,.row:focus-visib
 .plul{margin:0 0 14px;padding-left:20px;color:var(--ink);font-size:15px;line-height:1.65}
 #v-grok .plul{margin-top:14px}
 .pg p .gbtn{margin:2px 0 8px}
+.dstat{font-size:14px;color:var(--navy);min-height:1em;margin:0}.dstat.err{color:var(--risk,#B3261E);font-weight:600}
 #wslot .setcard{margin-top:4px}
 .pg.stop{background:#B3261E;color:#fff;border-radius:8px;padding:26px 30px 18px;margin:34px 0;box-shadow:var(--lift)}
 .pg.stop h2{color:#fff;font-weight:500;font-size:34px;letter-spacing:.01em;margin:0 0 10px}
@@ -524,7 +527,7 @@ const PROMPTS=[{"g": "Step 1 · Get ready", "lead": "About 15 minutes to set up,
 (function(){
  const nav=$('pnav'),list=$('plist');let h='<div class="lab">Step by step</div>',b='';
  const chip=f=>`<a class="fchip" href="files/${encodeURI(f)}" download>${esc(f)}<span>↓</span></a>`;
- PROMPTS.forEach((g,gi)=>{h+=`<a data-g="${gi}"${g.stop?' class="stopnav"':''}>${esc(g.g)}</a>`;b+=`<div class="pg${g.stop?' stop':''}" id="pg${gi}"><h2>${esc(g.g)}</h2>`+(g.lead?`<p class="plead">${esc(g.lead)}</p>`:'')+(g.link?`<p><a class="gbtn" href="${g.link.href}" target="_blank" rel="noopener">${esc(g.link.label)}</a></p>`:'')+(g.action==='deliver'?`<p><button class="gbtn" id="sdeliver">Deliver Message 67</button></p>`:'')+(g.list?`<ul class="plul">${g.list.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'')+(g.slot?`<div id="${g.slot}"></div>`:'')+(g.files?`<div class="pc flist">`+g.files.map(x=>`<div class="frow">${chip(x.f)}<span class="pn">${esc(x.n||'')}</span></div>`).join('')+`</div>`:'')+(g.items||[]).map((it,ii)=>`<div class="pc${it.big?' big':''}${it.hold?' hold':''}"><div class="ph2"><div class="pt">${esc(it.t)}</div>${it.hold?`<button class="xp sh">Show</button>`:''}${it.big?`<button class="xp ex2" data-x="${gi}-${ii}">Expand</button>`:''}${it.x?`${it.x?`<button class="cp" data-c="${gi}-${ii}">Copy</button>`:''}`:''}</div>${it.n?`<div class="pn">${esc(it.n)}</div>`:''}${it.files?`<div class="fchips"><span class="fl">Attach</span>${it.files.map(chip).join('')}</div>`:''}${it.x?`${it.x?`<pre id="pp${gi}-${ii}">${esc(it.x)}</pre>`:''}`:''}</div>`).join('')+'</div>';});
+ PROMPTS.forEach((g,gi)=>{h+=`<a data-g="${gi}"${g.stop?' class="stopnav"':''}>${esc(g.g)}</a>`;b+=`<div class="pg${g.stop?' stop':''}" id="pg${gi}"><h2>${esc(g.g)}</h2>`+(g.lead?`<p class="plead">${esc(g.lead)}</p>`:'')+(g.link?`<p><a class="gbtn" href="${g.link.href}" target="_blank" rel="noopener">${esc(g.link.label)}</a></p>`:'')+(g.action==='deliver'?`<p><button class="gbtn" id="sdeliver">Deliver Message 67</button></p><p class="dstat"></p><p class="plead" style="margin-top:4px">If the button doesn't work, use the menu in your sheet: LX-200 &gt; Deliver Message 67. Your page picks it up within a few seconds.</p>`:'')+(g.list?`<ul class="plul">${g.list.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'')+(g.slot?`<div id="${g.slot}"></div>`:'')+(g.files?`<div class="pc flist">`+g.files.map(x=>`<div class="frow">${chip(x.f)}<span class="pn">${esc(x.n||'')}</span></div>`).join('')+`</div>`:'')+(g.items||[]).map((it,ii)=>`<div class="pc${it.big?' big':''}${it.hold?' hold':''}"><div class="ph2"><div class="pt">${esc(it.t)}</div>${it.hold?`<button class="xp sh">Show</button>`:''}${it.big?`<button class="xp ex2" data-x="${gi}-${ii}">Expand</button>`:''}${it.x?`${it.x?`<button class="cp" data-c="${gi}-${ii}">Copy</button>`:''}`:''}</div>${it.n?`<div class="pn">${esc(it.n)}</div>`:''}${it.files?`<div class="fchips"><span class="fl">Attach</span>${it.files.map(chip).join('')}</div>`:''}${it.x?`${it.x?`<pre id="pp${gi}-${ii}">${esc(it.x)}</pre>`:''}`:''}</div>`).join('')+'</div>';});
  nav.innerHTML=h;list.innerHTML=b;
  nav.querySelectorAll('a').forEach(a=>a.onclick=()=>$('pg'+a.dataset.g).scrollIntoView({behavior:'smooth',block:'start'}));
  list.querySelectorAll('.sh').forEach(x=>x.onclick=()=>{const c=x.closest('.pc');c.classList.toggle('shown');x.textContent=c.classList.contains('shown')?'Hide':'Show';});
@@ -546,17 +549,19 @@ const isLX=m=>/LX-200|LX200/i.test(m.subject+' '+m.body.slice(0,400));
 function visible(){const q=$('q').value.trim().toLowerCase();return msgs.slice().sort((a,b)=>b.n-a.n).filter(m=>(filt==='all'||(filt==='lx'&&isLX(m))||(filt==='att'&&m.att.length))&&(!q||(m.from+' '+m.subject+' '+m.body).toLowerCase().includes(q)));}
 function counts(){$('cnt-all').textContent=msgs.length;$('cnt-lx').textContent=msgs.filter(isLX).length;$('cnt-att').textContent=msgs.filter(m=>m.att.length).length;}
 function snippet(b){return b.replace(/^CAUTION:.*\n+/,'').replace(/\s+/g,' ').slice(0,110);}
-function rows(){const v=visible();$('rows').innerHTML=v.map(m=>`<div class="row${m.n===sel?' sel':''}${unread.has(m.n)?' unread':''}" data-n="${m.n}"><div class="fr">${unread.has(m.n)?'<span class="newchip">NEW</span>':''}${esc(nameOf(m.from))}${m.att.length?'<span class="clip">📎</span>':''}</div><div class="dt">${short(m.date)}</div><div class="su"><b>${esc(m.subject)}</b> — ${esc(snippet(m.body))}</div></div>`).join('')||'<div style="padding:20px;color:#5A5D63">No messages match.</div>';
-  $('rows').querySelectorAll('.row').forEach(r=>r.onclick=()=>open(+r.dataset.n));
-  const s=$('rows').querySelector('.row.sel'); if(s) s.scrollIntoView({block:'nearest'});}
-function open(n){sel=n;unread.delete(n);const m=msgs.find(x=>x.n===n);rows();
+let rowsSig='';
+function rows(scroll=true){const v=visible();const sig=JSON.stringify([v.map(m=>m.n),sel,[...unread]]);if(!scroll&&sig===rowsSig)return;rowsSig=sig;$('rows').innerHTML=v.map(m=>`<div class="row${m.n===sel?' sel':''}${unread.has(m.n)?' unread':''}" data-n="${m.n}"><div class="fr">${unread.has(m.n)?'<span class="newchip">NEW</span>':''}${esc(nameOf(m.from))}${m.att.length?'<span class="clip">📎</span>':''}</div><div class="dt">${short(m.date)}</div><div class="su"><b>${esc(m.subject)}</b> — ${esc(snippet(m.body))}</div></div>`).join('')||'<div style="padding:20px;color:#5A5D63">No messages match.</div>';
+  if(scroll){const s=$('rows').querySelector('.row.sel'); if(s) s.scrollIntoView({block:'nearest'});}}
+$('rows').addEventListener('mousedown',e=>{if(e.button!==0)return;const r=e.target.closest('.row');if(r){e.preventDefault();open(+r.dataset.n);}});
+$('rows').addEventListener('keydown',e=>{if(e.key==='Enter'){const r=e.target.closest('.row');if(r)open(+r.dataset.n);}});
+function open(n){const m=msgs.find(x=>x.n===n);if(!m)return;sel=n;unread.delete(n);rows();
   $('v-inbox').classList.add('reading');$('read').innerHTML=`<button class="rback" id="rback">← Back to inbox</button><h2>${esc(m.subject)}</h2><div class="hdr"><span>From</span><b>${esc(m.from)}</b><span class="mnum">Message ${m.n} of ${msgs.length}</span><span>To</span><span>${esc(m.to)}</span><span>${esc(m.date)}</span>${m.cc?`<span>Cc</span><span>${esc(m.cc)}</span><span></span>`:''}</div><div class="body">${esc(m.body)}</div>${m.att.length?`<div class="atts">${m.att.map((a,i)=>a.img?`<div class="att open" data-i="${i}"><span class="ic">PDF</span>${esc(a.name)}</div>`:`<div class="att na"><span class="ic">PDF</span>${esc(a.name)}<small>not in the practice pack</small></div>`).join('')}</div>`:''}`;
   $('read').scrollTop=0;$('rback').onclick=()=>{$('v-inbox').classList.remove('reading');const r=document.querySelector('#rows .on, #rows .sel');if(r)r.scrollIntoView({block:'center'});};
   $('read').querySelectorAll('.att.open').forEach(e=>e.onclick=()=>lightbox([[m.att[+e.dataset.i].img,m.att[+e.dataset.i].name]]));}
 document.querySelectorAll('.fold').forEach(f=>f.onclick=()=>{filt=f.dataset.f;document.querySelectorAll('.fold').forEach(x=>x.classList.toggle('on',x===f));rows();});
 $('q').oninput=rows;
 $('lbx').onclick=()=>$('lb').classList.remove('on');$('lb').onclick=e=>{if(e.target.id==='lb')$('lb').classList.remove('on')};
-function deliver(){if(world.url){worldAction('deliver67');return;}if(delivered)return;delivered=true;msgs.push(D.m67);unread.add(67);counts();rows();$('deliver').disabled=true;$('deliver').textContent='Message 67 delivered';$('ph-m67').disabled=false;
+function deliver(){if(world.url){return worldAction('deliver67');}if(delivered)return;delivered=true;msgs.push(D.m67);unread.add(67);counts();rows();$('deliver').disabled=true;$('deliver').textContent='Message 67 delivered';$('ph-m67').disabled=false;
   const t=$('toast');t.innerHTML=`<small>New message · ${esc(nameOf(D.m67.from))}</small>${esc(D.m67.subject)}`;t.classList.add('on');t.onclick=()=>{show('inbox');open(67);t.classList.remove('on')};setTimeout(()=>t.classList.remove('on'),9000);}
 $('deliver').onclick=deliver;
 counts();rows();
@@ -643,7 +648,7 @@ function act(a){
   if(a.view){show(a.view);return;}
   if(a.doc){lightbox(a.doc.map(k=>DOCS[k]));return;}
   if('inbox' in a){$('q').value='';filt='all';document.querySelectorAll('.fold').forEach(x=>x.classList.toggle('on',x.dataset.f==='all'));show('inbox');rows();if(a.inbox)open(a.inbox);return;}
-  if(a.deliver){show('inbox');deliver();setTimeout(()=>open(67),600);return;}
+  if(a.deliver){show('inbox');Promise.resolve(deliver()).then(()=>setTimeout(()=>open(67),100));return;}
   if(a.hood){show('hood');const b=document.querySelector(`.ph[data-p="${a.hood}"]`);if(b&&!b.disabled)b.click();return;}
   if(a.grok){gk=a.grok;gsel();gout();gexp();show('grok');return;}
 }
@@ -676,7 +681,7 @@ function applyWorld(d){
     if(!world.first) wm.forEach(m=>{if(!had.has(m.n)){unread.add(m.n);toastMsg(m);}});
     msgs=wm; delivered=wm.some(m=>m.n===67);
     $('deliver').disabled=delivered;$('deliver').textContent=delivered?'Message 67 delivered':'Deliver Message 67';$('ph-m67').disabled=!delivered;
-    counts();rows();
+    counts();rows(false);
   }
   if(d.chat) renderChat(d.chat);
   renderFindings(d.findings||[]);
@@ -688,20 +693,25 @@ async function poll(){
   catch(e){connState('err','Feed unreachable');}
 }
 function startWorld(){clearInterval(world.timer);world.first=true;if(world.url){poll();world.timer=setInterval(poll,4000);}else{connState('','Built-in data');}}
+function wsay(msg,err){$('wstat').textContent=msg;document.querySelectorAll('.dstat').forEach(e=>{e.textContent=msg;e.classList.toggle('err',!!err);});
+  if(err){const t=$('toast');t.innerHTML=`<small>Message 67 not delivered</small>${esc(msg)}`;t.classList.add('on');t.onclick=()=>t.classList.remove('on');setTimeout(()=>t.classList.remove('on'),9000);}}
+function goKey(){const vv=$('wkey').closest('.view');if(vv)show(vv.id.slice(2));setTimeout(()=>{$('wkey').scrollIntoView({block:'center'});$('wkey').focus();},50);}
 async function worldAction(a){
-  if(!world.key){show('prompts');$('wslot').scrollIntoView();$('wkey').focus();$('wstat').textContent='Enter the hub key first.';return;}
-  $('wstat').textContent=a==='reset'?'Resetting…':'Delivering Message 67…';
-  try{const r=await fetch(world.url+(world.url.includes('?')?'&':'?')+'action='+a+'&key='+encodeURIComponent(world.key),{cache:'no-store'});const d=await r.json();if(d.error){$('wstat').textContent='Error: '+d.error;return;}
+  if(!world.key){wsay('Enter your hub key (the word you set with LX-200 > Set hub key), then click Save and connect.',true);goKey();return false;}
+  wsay(a==='reset'?'Resetting…':'Delivering Message 67…');
+  try{const r=await fetch(world.url+(world.url.includes('?')?'&':'?')+'action='+a+'&key='+encodeURIComponent(world.key),{cache:'no-store'});const d=await r.json();
+    if(d.error){wsay(d.error==='bad key'?"Your key doesn't match your sheet. Use the word you set with LX-200 > Set hub key, then Save and connect. Or in your sheet: LX-200 > Deliver Message 67.":'Error: '+d.error,true);return false;}
     if(a==='reset'){world.seenF=new Set();unread.clear();hreset();world.first=true;}
-    applyWorld(d);$('wstat').textContent=(a==='reset'?'World reset':'Message 67 delivered')+' · '+new Date().toLocaleTimeString();}
-  catch(e){$('wstat').textContent='Could not reach the feed.';}
+    applyWorld(d);wsay((a==='reset'?'World reset':'Message 67 delivered. Open the Inbox (press 2).')+' · '+new Date().toLocaleTimeString());return true;}
+  catch(e){wsay("Could not reach your sheet's feed. Check the URL in Step 4, or in your sheet use LX-200 > Deliver Message 67.",true);return false;}
 }
 $('wsave').onclick=()=>{world.url=$('wurl').value.trim();world.key=$('wkey').value.trim();store.set('wurl',world.url);store.set('wkey',world.key);startWorld();};
 $('wreset').onclick=()=>{if(!world.url){$('wstat').textContent='Connect the feed first.';return;}$('rmsg').textContent='Reset the LX-200 World? This restores every tab, removes Message 67 and clears all findings.';$('cmodal').classList.add('on');};
 $('cno').onclick=()=>$('cmodal').classList.remove('on');
 $('cyes').onclick=()=>{$('cmodal').classList.remove('on');worldAction('reset');};
 const initials=n=>String(n).split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase();
-function renderChat(c){let h='',last='';c.forEach(m=>{if(m.Date!==last){h+=`<div class="cday">${esc(m.Date)}</div>`;last=m.Date;}h+=`<div class="cm"><div class="av">${esc(initials(m.Who))}</div><div><b>${esc(m.Who)}</b><div class="tx">${esc(m.Message)}</div></div></div>`;});
+let chatSig='';
+function renderChat(c){const sg=JSON.stringify(c);if(sg===chatSig)return;chatSig=sg;let h='',last='';c.forEach(m=>{if(m.Date!==last){h+=`<div class="cday">${esc(m.Date)}</div>`;last=m.Date;}h+=`<div class="cm"><div class="av">${esc(initials(m.Who))}</div><div><b>${esc(m.Who)}</b><div class="tx">${esc(m.Message)}</div></div></div>`;});
   $('cmsgs').innerHTML=h||'<div class="lempty">No messages.</div>';$('chatcount').textContent=c.length+' messages';}
 function fcls(s){s=String(s).toUpperCase();return /RISK/.test(s)?'r':/CONFIRMED|COMPLETE/.test(s)?'ok':/AWAITING/.test(s)?'aw':'';}
 function renderFindings(f){
@@ -733,6 +743,10 @@ document.addEventListener('keydown',e=>{if(e.target.closest('input,textarea'))re
 });
 show(view);slide(sl);
 
+/* ---------- key peek ---------- */
+(function(){const k=$('wkey');if(!k)return;const w=document.createElement('span');w.className='keywrap';k.parentNode.insertBefore(w,k);w.appendChild(k);
+  const b=document.createElement('button');b.type='button';b.className='peek';b.textContent='Show';b.title='Show the key so you can check it for typos. Keys are case-sensitive.';
+  b.onclick=()=>{const s=k.type==='password';k.type=s?'text':'password';b.textContent=s?'Hide':'Show';};w.appendChild(b);})();
 /* ---------- inbox jumps ---------- */
 document.querySelectorAll('.jump').forEach(b=>b.onclick=()=>{const n=+b.dataset.n;$('q').value='';filt='all';document.querySelectorAll('.fold').forEach(x=>x.classList.toggle('on',x.dataset.f==='all'));rows();open(n);const r=document.querySelector('#rows .sel');if(r)r.scrollIntoView({block:'center'});});
 
@@ -742,7 +756,7 @@ function fillS(x){return x.split('{{SHEET}}').join(sheetLink()||'[ADD YOUR SHEET
 function fillPres(){document.querySelectorAll('#plist pre').forEach(pre=>{const k=pre.id.slice(2).split('-').map(Number);const it=PROMPTS[k[0]]&&PROMPTS[k[0]].items[k[1]];if(it&&it.x.includes('{{SHEET}}'))pre.textContent=fillS(it.x);});
  const st=$('wsheetst');if(st){const v=store.get('wsheet','');st.textContent=!v?'':sheetLink()?'Sheet link saved. Your job descriptions below now include it.':'That does not look like a Google Sheets link. Copy the address bar of your LX-200_World sheet.';}}
 (function(){const w=$('wsheet');if(!w)return;w.value=store.get('wsheet','');w.addEventListener('input',()=>{store.set('wsheet',w.value.trim());fillPres();});fillPres();})();
-(function(){const c=$('wcard'),sl=$('wslot');if(c&&sl)sl.appendChild(c);const d=$('sdeliver');if(d)d.onclick=()=>{if(!world.url){show('prompts');$('wurl').focus();$('wstat').textContent='Connect your sheet first (Step 4).';return;}deliver();};})();
+(function(){const c=$('wcard'),sl=$('wslot');if(c&&sl)sl.appendChild(c);const d=$('sdeliver');if(d)d.onclick=()=>{if(!world.url){wsay('Connect your sheet first: paste your Web app URL and key in Step 4, then Save and connect.',true);setTimeout(()=>{$('wurl').scrollIntoView({block:'center'});$('wurl').focus();},50);return;}deliver();};})();
 </script>
 </body>
 </html>
