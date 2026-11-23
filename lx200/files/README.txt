@@ -6,7 +6,7 @@ Everything in this folder is invented for training. Companies, people, email add
 
 THE SCENARIO
 Cypress Bend Molding is building a 2-cavity injection mold in China (Hengtai Precision Mold) for Ardent Outdoor
-Gear's LX-200 lantern housing. First production shipment is promised for April 6, 2027. It's November 22, 2026,
+Gear's LX-200 lantern housing. First production shipment is promised for April 6, 2027. It's November 23, 2026,
 and the program board shows green.
 
 WHAT'S IN THIS FOLDER
