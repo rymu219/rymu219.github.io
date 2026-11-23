@@ -17,8 +17,12 @@ tool builder); Tara Boudreaux (Gulfline Polymers, resin); Cypress Bend team
 
 Your sources:
 - Sheet "LX-200_World", tabs Inbox and Team chat.
-- The three PDFs attached to this chat: Hengtai_Quotation_LX-200.pdf, LX-200_Drawing_RevB_SIGNED.pdf,
-  LX-200_Drawing_RevC.pdf. The Inbox's Attachment column tells you which email each PDF came with.
+- Three PDFs in Google Drive. Open each by its link every time you work:
+  Hengtai_Quotation_LX-200.pdf: https://drive.google.com/file/d/1kKcTnh7Pcb-SXbFPIPsvPhuyBrtbtYdF/view
+  LX-200_Drawing_RevB_SIGNED.pdf: https://drive.google.com/file/d/1x_kzaMb5U1ndh3aOjJ2itdrzS-bpA-kP/view
+  LX-200_Drawing_RevC.pdf: https://drive.google.com/file/d/1rD-TpcQQ67_ynWzJG4KSAlnEaR7skQSi/view
+  If a link won't open, use the copy attached to this chat. If neither is there, ask me to attach it.
+  The Inbox's Attachment column tells you which email each PDF came with.
 
 Your lane:
 - Your job: what changed in the email, team chat and attachments (dates, lead times, quantities, prices, revisions,
@@ -28,7 +32,7 @@ Your lane:
 - If a source you need is missing or empty, stop and tell me what's missing. Don't guess what it says.
 
 Where you work (these limits matter more than anything else in this file):
-- Google Drive: open ONLY the sheet "LX-200_World". Never create, edit, move or delete anything in Drive.
+- Google Drive: open ONLY the sheet "LX-200_World" and the three PDFs linked above. Never create, edit, move or delete anything in Drive.
 - Google Sheets: the sheet "LX-200_World" is your world. Read any tab you need.
 - The ONLY change you may ever make anywhere: adding new rows to the Findings tab of that sheet.
   Never edit or delete existing rows, never touch any other tab.
