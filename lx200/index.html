@@ -370,6 +370,26 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,.row:focus-visib
 @media (max-width:1280px){.hint{display:none}.brand span{display:none}.tab{padding:7px 9px;gap:6px}}
 @media (max-width:1000px){.brand{display:none}.tab{padding:6px 7px;gap:5px;font-size:13px}.tab kbd{padding:0 4px}.bar{gap:2px;padding:0 8px}.conn{max-width:118px;overflow:hidden;text-overflow:ellipsis}.ex{display:none}}
 @media (max-width:760px){.tab kbd{display:none}}
+/* inbox: jump buttons + narrow layout */
+.jumps{display:flex;gap:6px;padding:0 10px}
+.jump{flex:1;background:#fff;border:1px solid var(--rule);color:var(--ink);padding:6px 0;border-radius:4px;font-family:var(--mono);font-size:12px;font-weight:500;cursor:pointer}
+.jump:hover{border-color:var(--navy);color:var(--navy)}
+.jlab{margin-top:18px}
+.rback{display:none;background:none;border:1px solid var(--rule);border-radius:4px;padding:6px 12px;font-size:13px;color:var(--ink);margin:0 0 16px;cursor:pointer}
+@media (max-width:1180px){
+ #v-inbox.on{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+ #v-inbox .side{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 12px;border-right:none;border-bottom:1px solid var(--rule)}
+ #v-inbox .side .acct,#v-inbox .side .lab{display:none}
+ #v-inbox .fold{border-radius:14px;padding:5px 12px;gap:8px}
+ #v-inbox .jumps{padding:0;margin-left:8px}
+ #v-inbox .jump{flex:none;padding:5px 10px}
+ #v-inbox .deliver{margin:0 0 0 auto;width:auto;padding:6px 12px}
+ #v-inbox .list,#v-inbox .read{grid-row:2;grid-column:1;min-height:0}
+ #v-inbox .read{display:none;padding:18px 22px}
+ #v-inbox.reading .read{display:block}
+ #v-inbox.reading .list{display:none}
+ .rback{display:inline-block}
+}
 .plul{margin:0 0 14px;padding-left:20px;color:var(--ink);font-size:15px;line-height:1.65}
 #v-grok .plul{margin-top:14px}
 .pg p .gbtn{margin:2px 0 8px}
@@ -410,6 +430,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,.row:focus-visib
     <div class="fold" data-f="att">With attachments <span id="cnt-att"></span></div>
     <div class="lab">Practice pack</div>
     <div class="acct">Cypress Bend Molding is fictional. Every person and company here is made up.</div>
+    <div class="lab jlab">Spot the signal</div><div class="jumps"><button class="jump" data-n="21">Msg 21</button><button class="jump" data-n="35">Msg 35</button><button class="jump" data-n="40">Msg 40</button></div>
     <button class="deliver" id="deliver">Deliver Message 67</button>
   </div>
   <div class="list"><div class="search"><input id="q" placeholder="Search mail" autocomplete="off"></div><div class="rows" id="rows"></div></div>
@@ -528,8 +549,8 @@ function rows(){const v=visible();$('rows').innerHTML=v.map(m=>`<div class="row$
   $('rows').querySelectorAll('.row').forEach(r=>r.onclick=()=>open(+r.dataset.n));
   const s=$('rows').querySelector('.row.sel'); if(s) s.scrollIntoView({block:'nearest'});}
 function open(n){sel=n;unread.delete(n);const m=msgs.find(x=>x.n===n);rows();
-  $('read').innerHTML=`<h2>${esc(m.subject)}</h2><div class="hdr"><span>From</span><b>${esc(m.from)}</b><span class="mnum">Message ${m.n} of ${msgs.length}</span><span>To</span><span>${esc(m.to)}</span><span>${esc(m.date)}</span>${m.cc?`<span>Cc</span><span>${esc(m.cc)}</span><span></span>`:''}</div><div class="body">${esc(m.body)}</div>${m.att.length?`<div class="atts">${m.att.map((a,i)=>a.img?`<div class="att open" data-i="${i}"><span class="ic">PDF</span>${esc(a.name)}</div>`:`<div class="att na"><span class="ic">PDF</span>${esc(a.name)}<small>not in the practice pack</small></div>`).join('')}</div>`:''}`;
-  $('read').scrollTop=0;
+  $('v-inbox').classList.add('reading');$('read').innerHTML=`<button class="rback" id="rback">← Back to inbox</button><h2>${esc(m.subject)}</h2><div class="hdr"><span>From</span><b>${esc(m.from)}</b><span class="mnum">Message ${m.n} of ${msgs.length}</span><span>To</span><span>${esc(m.to)}</span><span>${esc(m.date)}</span>${m.cc?`<span>Cc</span><span>${esc(m.cc)}</span><span></span>`:''}</div><div class="body">${esc(m.body)}</div>${m.att.length?`<div class="atts">${m.att.map((a,i)=>a.img?`<div class="att open" data-i="${i}"><span class="ic">PDF</span>${esc(a.name)}</div>`:`<div class="att na"><span class="ic">PDF</span>${esc(a.name)}<small>not in the practice pack</small></div>`).join('')}</div>`:''}`;
+  $('read').scrollTop=0;$('rback').onclick=()=>{$('v-inbox').classList.remove('reading');const r=document.querySelector('#rows .on, #rows .sel');if(r)r.scrollIntoView({block:'center'});};
   $('read').querySelectorAll('.att.open').forEach(e=>e.onclick=()=>lightbox([[m.att[+e.dataset.i].img,m.att[+e.dataset.i].name]]));}
 document.querySelectorAll('.fold').forEach(f=>f.onclick=()=>{filt=f.dataset.f;document.querySelectorAll('.fold').forEach(x=>x.classList.toggle('on',x===f));rows();});
 $('q').oninput=rows;
@@ -697,6 +718,7 @@ startWorld();
 /* ---------- keys ---------- */
 document.addEventListener('keydown',e=>{if(e.target.closest('input,textarea'))return;
   if(e.key==='Escape'&&$('cmodal').classList.contains('on')){$('cmodal').classList.remove('on');return;}
+  if(e.key==='Escape'&&view==='inbox'&&$('v-inbox').classList.contains('reading')&&matchMedia('(max-width:1180px)').matches&&!$('lb').classList.contains('on')){$('v-inbox').classList.remove('reading');return;}
   if(e.key==='Escape'){if($('lb').classList.contains('on')){$('lb').classList.remove('on');return;}if(penOn){pen(false);return;}return;}
   if(e.key==='p'||e.key==='P'){pen(!penOn);return;}
   if(e.key==='c'||e.key==='C'){clearInk();return;}
@@ -707,6 +729,9 @@ document.addEventListener('keydown',e=>{if(e.target.closest('input,textarea'))re
   if(view==='hood'){if(e.key===' '){e.preventDefault();playing?pause():play();}if(e.key==='ArrowRight'){pause();next();}}
 });
 show(view);slide(sl);
+
+/* ---------- inbox jumps ---------- */
+document.querySelectorAll('.jump').forEach(b=>b.onclick=()=>{const n=+b.dataset.n;$('q').value='';filt='all';document.querySelectorAll('.fold').forEach(x=>x.classList.toggle('on',x.dataset.f==='all'));rows();open(n);const r=document.querySelector('#rows .sel');if(r)r.scrollIntoView({block:'center'});});
 
 /* ---------- attendee wiring ---------- */
 function sheetLink(){const v=store.get('wsheet','');const m=String(v).match(/docs\.google\.com\/spreadsheets\/d\/([A-Za-z0-9_-]{20,})/);return m?'https://docs.google.com/spreadsheets/d/'+m[1]+'/edit':'';}
