@@ -1,29 +1,24 @@
-LX-200 PRACTICE PACK (FICTIONAL TRAINING DATA)
-Webinar: Your Project Already Told You It Would Slip
-Ryan Murphy
+LX-200 PRACTICE PACK
+DataCamp Code Along: Build An AI Assistant with Grok Bot · Ryan Murphy
+Monday, November 23, 2026, 10:00 a.m. Central
+Everything here is fictional: the company, the people, the emails and the numbers.
 
-Everything in this folder is invented for training. Companies, people, email addresses and numbers are fictional.
+START HERE
+Open https://rymu219.github.io/lx200/ and do Steps 1 to 5 before the session. Stop at the red STOP box.
+Build_Along_Setup_Guide.txt has the same steps as text.
 
 THE SCENARIO
 Cypress Bend Molding is building a 2-cavity injection mold in China (Hengtai Precision Mold) for Ardent Outdoor
 Gear's LX-200 lantern housing. First production shipment is promised for April 6, 2027. It's November 23, 2026,
 and the program board shows green.
 
-WHAT'S IN THIS FOLDER
-Build_Along_Setup_Guide.txt  Start here if you want to build along. About 15 minutes before the session.
-Build_Along_Bot_Prompts.txt  The Scout, Ledger and Foreman prompts, ready to paste, plus a version for any AI assistant.
-LX-200_Practice_Inbox.txt    66 emails from the program manager's mailbox, Sep 8 to Nov 22, 2026, oldest first.
-                             This is the file to give your bots.
-LX-200_Practice_Inbox.csv    The same 66 emails as a spreadsheet, one row per email.
-LX-200_Program_Board         The program board the team maintains (Google Sheet): gates, schedule, budget and
-                             hours, payments, documents, risks and contacts. Get your own editable copy here:
-                             https://docs.google.com/spreadsheets/d/14-3MDSxidBCbzd6Q0J0kZ0viOAPx8RJtp-_GtxdkNZ8/copy
-Hengtai_Quotation_LX-200.pdf    The tool builder's quote (attached to message 7 in the inbox).
-LX-200_Drawing_RevB_SIGNED.pdf  The drawing the customer signed (attached to message 25).
-LX-200_Drawing_RevC.pdf         A later drawing revision (attached to message 21).
-
 THE QUESTION
 Read the inbox, the board and the attachments together. Is this program on track? If not, what is the evidence,
-what has to happen next, and who owns it?
+what has to happen next, and who owns it? Some emails look important and aren't. Some look routine and aren't.
 
-Some emails look important and aren't. Some look routine and aren't.
+THE SHARED FOLDER
+https://drive.google.com/drive/folders/1qGfnjfkXvbMyB-0UwjmC1aej4Ap53ozH
+Build_Along_Setup_Guide.txt   The setup steps as text.
+The three PDFs                Scout opens them by link. Attach them only if Scout can't open them.
+Plan_Checker_Prompt.txt       Try the idea on your own project plan (end of the session).
+No Google? Use these/         A version that works from attached files, with no Google connection.
