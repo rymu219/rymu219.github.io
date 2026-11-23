@@ -362,6 +362,14 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,.row:focus-visib
 .frow .pn{margin:0}
 .plead{color:var(--muted);font-size:14px;margin:-6px 0 12px}
 .pc.hold pre{display:none}.pc.hold.shown pre{display:block}
+/* narrow windows (zoomed in) */
+.bar{overflow:hidden}
+.tab,.brand,.conn,.pen{white-space:nowrap;flex-shrink:0}
+.ex{flex-shrink:1;min-width:0}
+.hint{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex-shrink:1}
+@media (max-width:1280px){.hint{display:none}.brand span{display:none}.tab{padding:7px 9px;gap:6px}}
+@media (max-width:1000px){.brand{display:none}.tab{padding:6px 7px;gap:5px;font-size:13px}.tab kbd{padding:0 4px}.bar{gap:2px;padding:0 8px}.conn{max-width:118px;overflow:hidden;text-overflow:ellipsis}.ex{display:none}}
+@media (max-width:760px){.tab kbd{display:none}}
 .plul{margin:0 0 14px;padding-left:20px;color:var(--ink);font-size:15px;line-height:1.65}
 #v-grok .plul{margin-top:14px}
 .pg p .gbtn{margin:2px 0 8px}
@@ -494,7 +502,7 @@ const PROMPTS=[{"g": "Step 1 · Get ready", "lead": "About 15 minutes to set up,
 (function(){
  const nav=$('pnav'),list=$('plist');let h='<div class="lab">Step by step</div>',b='';
  const chip=f=>`<a class="fchip" href="files/${encodeURI(f)}" download>${esc(f)}<span>↓</span></a>`;
- PROMPTS.forEach((g,gi)=>{h+=`<a data-g="${gi}"${g.stop?' class="stopnav"':''}>${esc(g.g)}</a>`;b+=`<div class="pg${g.stop?' stop':''}" id="pg${gi}"><h2>${esc(g.g)}</h2>`+(g.lead?`<p class="plead">${esc(g.lead)}</p>`:'')+(g.link?`<p><a class="gbtn" href="${g.link.href}" target="_blank" rel="noopener">${esc(g.link.label)}</a></p>`:'')+(g.action==='deliver'?`<p><button class="gbtn" id="sdeliver">Deliver Message 67</button></p>`:'')+(g.list?`<ul class="plul">${g.list.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'')+(g.slot?`<div id="${g.slot}"></div>`:'')+(g.files?`<div class="pc flist">`+g.files.map(x=>`<div class="frow">${chip(x.f)}<span class="pn">${esc(x.n||'')}</span></div>`).join('')+`</div>`:'')+(g.items||[]).map((it,ii)=>`<div class="pc${it.big?' big':''}${it.hold?' hold':''}"><div class="ph2"><div class="pt">${esc(it.t)}</div>${it.hold?`<button class="xp sh">Show</button>`:''}${it.big?`<button class="xp ex2" data-x="${gi}-${ii}">Expand</button>`:''}${it.x?`<button class="cp" data-c="${gi}-${ii}">Copy</button>`:''}</div>${it.n?`<div class="pn">${esc(it.n)}</div>`:''}${it.files?`<div class="fchips"><span class="fl">Attach</span>${it.files.map(chip).join('')}</div>`:''}${it.x?`<pre id="pp${gi}-${ii}">${esc(it.x)}</pre>`:''}</div>`).join('')+'</div>';});
+ PROMPTS.forEach((g,gi)=>{h+=`<a data-g="${gi}"${g.stop?' class="stopnav"':''}>${esc(g.g)}</a>`;b+=`<div class="pg${g.stop?' stop':''}" id="pg${gi}"><h2>${esc(g.g)}</h2>`+(g.lead?`<p class="plead">${esc(g.lead)}</p>`:'')+(g.link?`<p><a class="gbtn" href="${g.link.href}" target="_blank" rel="noopener">${esc(g.link.label)}</a></p>`:'')+(g.action==='deliver'?`<p><button class="gbtn" id="sdeliver">Deliver Message 67</button></p>`:'')+(g.list?`<ul class="plul">${g.list.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'')+(g.slot?`<div id="${g.slot}"></div>`:'')+(g.files?`<div class="pc flist">`+g.files.map(x=>`<div class="frow">${chip(x.f)}<span class="pn">${esc(x.n||'')}</span></div>`).join('')+`</div>`:'')+(g.items||[]).map((it,ii)=>`<div class="pc${it.big?' big':''}${it.hold?' hold':''}"><div class="ph2"><div class="pt">${esc(it.t)}</div>${it.hold?`<button class="xp sh">Show</button>`:''}${it.big?`<button class="xp ex2" data-x="${gi}-${ii}">Expand</button>`:''}${it.x?`${it.x?`<button class="cp" data-c="${gi}-${ii}">Copy</button>`:''}`:''}</div>${it.n?`<div class="pn">${esc(it.n)}</div>`:''}${it.files?`<div class="fchips"><span class="fl">Attach</span>${it.files.map(chip).join('')}</div>`:''}${it.x?`${it.x?`<pre id="pp${gi}-${ii}">${esc(it.x)}</pre>`:''}`:''}</div>`).join('')+'</div>';});
  nav.innerHTML=h;list.innerHTML=b;
  nav.querySelectorAll('a').forEach(a=>a.onclick=()=>$('pg'+a.dataset.g).scrollIntoView({behavior:'smooth',block:'start'}));
  list.querySelectorAll('.sh').forEach(x=>x.onclick=()=>{const c=x.closest('.pc');c.classList.toggle('shown');x.textContent=c.classList.contains('shown')?'Hide':'Show';});
